@@ -1,7 +1,6 @@
-# $NetBSD: Makefile,v 1.7 2018/11/12 03:52:51 ryoon Exp $
+# $NetBSD: Makefile,v 1.9 2019/01/08 16:27:16 ryoon Exp $
 
-DISTNAME=	keepassxc-2.3.3
-PKGREVISION=	3
+DISTNAME=	keepassxc-2.3.4
 CATEGORIES=	security x11
 MASTER_SITES=	${MASTER_SITE_GITHUB:=keepassxreboot/}
 

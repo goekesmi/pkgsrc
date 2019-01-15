@@ -1,24 +1,19 @@
-# $NetBSD: Makefile,v 1.2 2018/08/13 17:04:42 nia Exp $
+# $NetBSD: Makefile,v 1.4 2019/01/01 22:16:15 nia Exp $
 
-DISTNAME=	libretro-snes9x-1.56.2
-CATEGORIES=	emulators
-MASTER_SITES=	${MASTER_SITE_GITHUB:=snes9xgit/}
-GITHUB_PROJECT=	snes9x
+.include "../../emulators/snes9x/Makefile.common"
+
+PKGNAME=	libretro-snes9x-${SNES9X_VERSION}
 
 MAINTAINER=	nia@NetBSD.org
 HOMEPAGE=	https://docs.libretro.com/library/snes9x/
 COMMENT=	Libretro core based on the snes9x Super Nintendo emulator
-LICENSE=	snes9x-license
 
-EXTRACT_USING=	bsdtar
-
-WRKSRC=		${WRKDIR}/${GITHUB_PROJECT}-${GITHUB_TAG}
 BUILD_DIRS=	libretro
 
 USE_TOOLS+=	gmake
-USE_LANGUAGES=	c c++11
 
 MAKE_FLAGS+=	GIT_VERSION="-pkgsrc"
+MAKE_FLAGS+=	LTO=
 
 INSTALLATION_DIRS+=	${PREFIX}/lib/libretro
 

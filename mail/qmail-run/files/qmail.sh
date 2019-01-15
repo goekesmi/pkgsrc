@@ -1,13 +1,9 @@
 #!@RCD_SCRIPTS_SHELL@
 #
-# $NetBSD: qmail.sh,v 1.7 2017/08/05 03:03:17 schmonz Exp $
+# $NetBSD: qmail.sh,v 1.9 2018/12/30 19:09:05 schmonz Exp $
 #
 # @PKGNAME@ master script for administrators to control qmail
 # services. Usage resembles the qmailctl script from "Life with qmail".
-#
-# For Red Hat chkconfig
-# chkconfig: - 80 30
-# description: the qmail MTA
 #
 
 # KEYWORD: nostart
@@ -20,13 +16,11 @@ rcd_dir=`@DIRNAME@ $0`
 
 # NOTE: run_rc_command sets $rc_arg
 #
-forward_commands()
-{
+forward_commands() {
 	qmailrcd $COMMAND_LIST
 }
 
-reverse_commands()
-{
+reverse_commands() {
 	REVCOMMAND_LIST=
 	for file in $COMMAND_LIST; do
 		REVCOMMAND_LIST="$file $REVCOMMAND_LIST"
@@ -35,8 +29,7 @@ reverse_commands()
 	qmailrcd $REVCOMMAND_LIST
 }
 
-qmailrcd()
-{
+qmailrcd() {
 	# Backward compat with NetBSD <1.6:
 	[ -z "$rc_arg" ] && rc_arg=$_arg
 
@@ -50,8 +43,7 @@ qmailrcd()
 	done
 }
 
-qmail_help()
-{
+qmail_help() {
 	@CAT@ <<HELP
    stop -- stops mail service (smtp connections refused, nothing goes out)
   start -- starts mail service (smtp connection accepted, mail can go out)

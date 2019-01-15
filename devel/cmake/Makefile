@@ -1,9 +1,9 @@
-# $NetBSD: Makefile,v 1.152 2018/10/16 16:37:21 leot Exp $
+# $NetBSD: Makefile,v 1.158 2019/01/04 21:02:07 triaxx Exp $
 
 .include "Makefile.version"
 
 DISTNAME=	cmake-${CMAKE_VERSION}
-PKGREVISION=	1
+PKGREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	https://cmake.org/files/v${CMAKE_API}/
 
@@ -77,4 +77,5 @@ CFLAGS+=	-I${BUILDLINK_INCDIRS.curses}/ncurses
 CXXFLAGS+=	-I${BUILDLINK_INCDIRS.curses}/ncurses
 .endif
 
+.include "../../mk/pthread.buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

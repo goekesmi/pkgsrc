@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.785 2018/11/19 12:52:53 tnn Exp $
+# $NetBSD: Makefile,v 1.792 2019/01/10 02:50:15 gutteridge Exp $
 #
 
 COMMENT=	System utilities
@@ -392,6 +392,7 @@ SUBDIR+=	neb-wipe
 SUBDIR+=	netbsd-kmod-tools
 SUBDIR+=	netbt-hcidump
 SUBDIR+=	news
+SUBDIR+=	nnn
 SUBDIR+=	noice
 SUBDIR+=	notification-daemon
 SUBDIR+=	nrg2iso
@@ -440,6 +441,7 @@ SUBDIR+=	p5-UPS-Nut
 SUBDIR+=	p5-Unburden-Home-Dir
 SUBDIR+=	p5-Unix-ConfigFile
 SUBDIR+=	p5-Unix-Process
+SUBDIR+=	p5-Unix-Processors
 SUBDIR+=	p5-Unix-Statgrab
 SUBDIR+=	p5-Unix-Syslog
 SUBDIR+=	p5-collectd
@@ -521,7 +523,6 @@ SUBDIR+=	rsyslog-rabbitmq
 SUBDIR+=	rsyslog-relp
 SUBDIR+=	rsyslog-snmp
 SUBDIR+=	rtty
-SUBDIR+=	ruby-activesambaldap
 SUBDIR+=	ruby-capistrano-harrow
 SUBDIR+=	ruby-capistrano-stats
 SUBDIR+=	ruby-chef
@@ -533,6 +534,7 @@ SUBDIR+=	ruby-facter
 SUBDIR+=	ruby-fssm
 SUBDIR+=	ruby-listen
 SUBDIR+=	ruby-notify
+SUBDIR+=	ruby-puppet-resource_api
 SUBDIR+=	ruby-quota
 SUBDIR+=	ruby-rb-appscript
 SUBDIR+=	ruby-rb-inotify
@@ -613,6 +615,7 @@ SUBDIR+=	tsm8
 SUBDIR+=	u-boot-a10-olinuxino-lime
 SUBDIR+=	u-boot-bananapi
 SUBDIR+=	u-boot-bananapi-m3
+SUBDIR+=	u-boot-bananapi-r2
 SUBDIR+=	u-boot-beagleboard
 SUBDIR+=	u-boot-beagleboneblack
 SUBDIR+=	u-boot-beaglebonewhite
@@ -707,6 +710,7 @@ SUBDIR+=	wbm-virtual-server
 SUBDIR+=	webmin
 SUBDIR+=	whowatch
 SUBDIR+=	wipe
+SUBDIR+=	within
 SUBDIR+=	wmSMPmon
 SUBDIR+=	wmcpuload
 SUBDIR+=	wmmemmon

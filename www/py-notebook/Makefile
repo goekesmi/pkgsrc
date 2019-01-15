@@ -1,7 +1,8 @@
-# $NetBSD: Makefile,v 1.8 2018/05/11 19:46:36 minskim Exp $
+# $NetBSD: Makefile,v 1.12 2019/01/08 10:49:30 markd Exp $
 
-DISTNAME=	notebook-5.5.0
+DISTNAME=	notebook-5.7.4
 PKGNAME=	${PYPKGPREFIX}-${DISTNAME}
+PKGREVISION=	1
 CATEGORIES=	www python
 MASTER_SITES=	${MASTER_SITE_PYPI:=n/notebook/}
 
@@ -18,6 +19,7 @@ DEPENDS+=	${PYPKGPREFIX}-jupyter_core>=4.4.0:../../devel/py-jupyter_core
 DEPENDS+=	${PYPKGPREFIX}-jinja2-[0-9]*:../../textproc/py-jinja2
 DEPENDS+=	${PYPKGPREFIX}-nbconvert-[0-9]*:../../www/py-nbconvert
 DEPENDS+=	${PYPKGPREFIX}-nbformat-[0-9]*:../../www/py-nbformat
+DEPENDS+=	${PYPKGPREFIX}-prometheus_client-[0-9]*:../../net/py-prometheus_client
 DEPENDS+=	${PYPKGPREFIX}-terminado>=0.8.1:../../www/py-terminado
 DEPENDS+=	${PYPKGPREFIX}-tornado>=4:../../www/py-tornado
 DEPENDS+=	${PYPKGPREFIX}-traitlets>=4.2.1:../../devel/py-traitlets
@@ -25,11 +27,13 @@ DEPENDS+=	${PYPKGPREFIX}-zmq>=17.0.0:../../net/py-zmq
 
 USE_LANGUAGES=	# none
 
-post-install:
-	for f in jupyter-bundlerextension jupyter-nbextension jupyter-notebook jupyter-serverextension; do \
-		${MV} ${DESTDIR}${PREFIX}/bin/$$f ${DESTDIR}${PREFIX}/bin/$${f}${PYVERSSUFFIX} || ${TRUE}; \
-	done
+PYTHON_VERSIONS_INCOMPATIBLE=	27	# py-ipykernel
 
-.include "../../lang/python/application.mk"
+post-install:
+.for name in bundlerextension nbextension notebook serverextension
+	cd ${DESTDIR}${PREFIX}/bin && \
+		${MV} jupyter-${name} jupyter-${name}-${PYVERSSUFFIX} || ${TRUE}
+.endfor
+
 .include "../../lang/python/egg.mk"
 .include "../../mk/bsd.pkg.mk"

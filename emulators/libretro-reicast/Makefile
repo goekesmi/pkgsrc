@@ -1,10 +1,10 @@
-# $NetBSD: Makefile,v 1.2 2018/10/28 13:21:10 nia Exp $
+# $NetBSD: Makefile,v 1.4 2019/01/02 20:07:15 nia Exp $
 
-DISTNAME=	libretro-reicast-20181026
+DISTNAME=	libretro-reicast-20181223
 CATEGORIES=	emulators
 MASTER_SITES=	${MASTER_SITE_GITHUB:=libretro/}
 GITHUB_PROJECT=	reicast-emulator
-GITHUB_TAG=	dfe8d3cf5185aa345d529d66783ef606e680c9cb
+GITHUB_TAG=	3dd45d27159278e88a73352a318d0b23bc241a1a
 
 MAINTAINER=	pkgsrc-users@NetBSD.org
 HOMEPAGE=	https://docs.libretro.com/library/reicast/
@@ -15,13 +15,12 @@ EXTRACT_USING=	bsdtar
 USE_TOOLS+=	gmake
 USE_LANGUAGES=	c c++11
 
+MAKE_FLAGS+=		platform=unix
 MAKE_FLAGS+=		HAVE_OPENMP=0
 MAKE_FLAGS+=		HAVE_LTCG=0
 MAKE_FLAGS+=		SINGLE_PREC_FLAGS=1
 MAKE_FLAGS+=		GIT_VERSION="-pkgsrc"
 MAKE_FLAGS+=		CC_AS=${AS:Q}
-
-MAKE_FLAGS.NetBSD+=	NO_NVMEM=1
 
 .include "../../mk/bsd.prefs.mk"
 

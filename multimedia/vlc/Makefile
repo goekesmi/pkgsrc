@@ -1,8 +1,8 @@
-# $NetBSD: Makefile,v 1.216 2018/11/14 22:22:08 kleink Exp $
+# $NetBSD: Makefile,v 1.218 2018/11/27 18:28:48 maya Exp $
 
 # (Intended to be upgraded to vlc3 when dependencies resolved)
 DISTNAME=		vlc-${VLC_VERSION}
-PKGREVISION=		11
+PKGREVISION=		12
 CATEGORIES=		multimedia
 MASTER_SITES=		${MASTER_SITE_SOURCEFORGE:=vlc/}
 MASTER_SITES+=		http://download.videolan.org/pub/videolan/vlc/${VLC_VERSION}/
@@ -66,7 +66,7 @@ CFLAGS+=		-fPIC
 CXXFLAGS+=		-fPIC
 
 # which platforms support OSSv4?
-.if ${MACHINE_PLATFORM:MNetBSD-[789]*-*}
+.if ${MACHINE_PLATFORM:MNetBSD-*-*}
 PLIST.oss=		yes
 .include "../../mk/oss.buildlink3.mk"
 .else

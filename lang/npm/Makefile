@@ -1,14 +1,14 @@
-# $NetBSD: Makefile,v 1.13 2018/09/07 11:51:10 fhajny Exp $
+# $NetBSD: Makefile,v 1.15 2019/01/08 14:53:49 adam Exp $
 
-DISTNAME=	cli-6.4.1
+DISTNAME=	cli-6.5.0
 PKGNAME=	${DISTNAME:S/cli/npm/}
 CATEGORIES=	lang
 MASTER_SITES=	${MASTER_SITE_GITHUB:=npm/}
 GITHUB_PROJECT=	cli
 GITHUB_TAG=	v${PKGVERSION_NOREV}
 
-MAINTAINER=	filip@joyent.com
-HOMEPAGE=	https://github.com/npm/cli/
+MAINTAINER=	fhajny@NetBSD.org
+HOMEPAGE=	https://github.com/npm/cli
 COMMENT=	Package manager for JavaScript
 LICENSE=	artistic-2.0
 
@@ -35,7 +35,7 @@ SUBST_FILES.python=	node_modules/node-gyp/lib/configure.js
 SUBST_MESSAGE.python=	Fixing path to Python
 SUBST_VARS.python=	PYTHONBIN
 
-CHECK_INTERPRETER_SKIP+=lib/node_modules/npm/*
+CHECK_INTERPRETER_SKIP+=	lib/node_modules/npm/*
 
 .include "../../mk/bsd.prefs.mk"
 

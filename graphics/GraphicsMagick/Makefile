@@ -1,6 +1,5 @@
-# $NetBSD: Makefile,v 1.91 2018/11/14 22:21:34 kleink Exp $
+# $NetBSD: Makefile,v 1.94 2018/11/22 16:09:23 adam Exp $
 
-PKGREVISION= 3
 .include "Makefile.common"
 
 MAINTAINER=	pkgsrc-users@NetBSD.org
@@ -30,6 +29,9 @@ TEST_TARGET=	check
 
 .include "options.mk"
 
+.include "../../archivers/bzip2/buildlink3.mk"
+.include "../../archivers/xz/buildlink3.mk"
+.include "../../archivers/zstd/buildlink3.mk"
 .include "../../devel/libltdl/buildlink3.mk"
 .include "../../devel/zlib/buildlink3.mk"
 .include "../../graphics/freetype2/buildlink3.mk"

@@ -1,8 +1,7 @@
-# $NetBSD: Makefile,v 1.4 2018/08/22 09:43:32 wiz Exp $
+# $NetBSD: Makefile,v 1.7 2018/12/27 15:57:46 joerg Exp $
 
-DISTNAME=	libcerf-1.5
-PKGREVISION=	1
-CATEGORIES=	math
+DISTNAME=	libcerf-1.7
+CATEGORIES=	devel math
 MASTER_SITES=	http://apps.jcns.fz-juelich.de/src/libcerf/
 EXTRACT_SUFX=	.tgz
 
@@ -11,10 +10,13 @@ HOMEPAGE=	http://apps.jcns.fz-juelich.de/doku/sc/libcerf
 COMMENT=	Library providing efficient and accurate complex error functions
 LICENSE=	mit
 
-GNU_CONFIGURE=	yes
-USE_LIBTOOL=	yes
-USE_TOOLS+=	perl:build gmake pkg-config
+USE_LANGUAGES=		c99
+USE_CMAKE=		yes
+CMAKE_ARG_PATH=		${WRKSRC}
+CONFIGURE_DIRS=		${WRKDIR}/build
+USE_TOOLS+=		pod2man
 
-PKGCONFIG_OVERRIDE+=	libcerf.pc.in
+post-extract:
+	${MKDIR} ${WRKDIR}/build
 
 .include "../../mk/bsd.pkg.mk"

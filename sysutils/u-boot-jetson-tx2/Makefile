@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2 2018/09/25 21:49:20 jmcneill Exp $
+# $NetBSD: Makefile,v 1.4 2018/12/31 15:06:45 jmcneill Exp $
 
 UBOOT_TARGET=		jetson-tx2
 UBOOT_CONFIG=		p2771-0000-500_defconfig

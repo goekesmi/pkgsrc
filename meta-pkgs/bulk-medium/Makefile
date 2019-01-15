@@ -1,6 +1,6 @@
-# $NetBSD: Makefile,v 1.48 2018/09/24 01:26:50 taca Exp $
+# $NetBSD: Makefile,v 1.50 2019/01/14 13:19:11 taca Exp $
 
-DISTNAME=	bulk-medium-20180924
+DISTNAME=	bulk-medium-20190114
 CATEGORIES=	meta-pkgs
 MASTER_SITES=	# empty
 DISTFILES=	# empty
@@ -56,9 +56,7 @@ BUILD_DEPENDS+=	vorbis-tools-[0-9]*:../../audio/vorbis-tools
 BUILD_DEPENDS+=	jabberd>=1<2:../../chat/jabberd
 BUILD_DEPENDS+=	jabberd>=2:../../chat/jabberd2
 BUILD_DEPENDS+=	sirc-[0-9]*:../../chat/sirc
-BUILD_DEPENDS+=	xchat-[0-9]*:../../chat/xchat
-BUILD_DEPENDS+=	xchat-perl-[0-9]*:../../chat/xchat-perl
-BUILD_DEPENDS+=	xchat-python-[0-9]*:../../chat/xchat-python
+BUILD_DEPENDS+=	hexchat-[0-9]*:../../chat/hexchat
 BUILD_DEPENDS+=	fribidi-[0-9]*:../../converters/fribidi
 BUILD_DEPENDS+=	mysql-client>=5.5<5.6:../../databases/mysql55-client
 BUILD_DEPENDS+=	mysql-client>=5.6:../../databases/mysql56-client
@@ -82,10 +80,10 @@ BUILD_DEPENDS+=	netpbm-[0-9]*:../../graphics/netpbm
 BUILD_DEPENDS+=	${PYPKGPREFIX}-matplotlib-[0-9]*:../../graphics/py-matplotlib
 BUILD_DEPENDS+=	${PYPKGPREFIX}-matplotlib-gtk-[0-9]*:../../graphics/py-matplotlib-gtk2
 BUILD_DEPENDS+=	gawk-[0-9]*:../../lang/gawk
-BUILD_DEPENDS+=	php>=5.6<5.7:../../lang/php56
-BUILD_DEPENDS+=	ruby22-base-[0-9]*:../../lang/ruby22-base
+BUILD_DEPENDS+=	php>=7.1<7.2:../../lang/php71
 BUILD_DEPENDS+=	ruby23-base-[0-9]*:../../lang/ruby23-base
 BUILD_DEPENDS+=	ruby24-base-[0-9]*:../../lang/ruby24-base
+BUILD_DEPENDS+=	ruby25-base-[0-9]*:../../lang/ruby25-base
 BUILD_DEPENDS+=	sun-jdk6-[0-9]*:../../lang/sun-jdk6
 BUILD_DEPENDS+=	sun-jre6-[0-9]*:../../lang/sun-jre6
 BUILD_DEPENDS+=	openjdk7-[0-9]*:../../lang/openjdk7

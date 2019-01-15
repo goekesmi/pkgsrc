@@ -1,4 +1,4 @@
-# $NetBSD: nodeversion.mk,v 1.3 2018/05/04 14:28:32 fhajny Exp $
+# $NetBSD: nodeversion.mk,v 1.5 2018/12/12 16:38:06 adam Exp $
 
 # This file determins which nodejs version is used as a dependency for
 # a package.
@@ -46,10 +46,10 @@ NODEJS_NODEVERSION_MK=	# defined
 # optionally handled quoted package names
 .if defined(PKGNAME_REQD) && !empty(PKGNAME_REQD:Mnode[0-9]-*) || \
     defined(PKGNAME_REQD) && !empty(PKGNAME_REQD:M*-node[0-9]-*)
-NODE_VERSION_REQD?= ${PKGNAME_REQD:C/(^.*-|^)node([0-9])-.*/\2/}
+NODE_VERSION_REQD?=	${PKGNAME_REQD:C/(^.*-|^)node([0-9])-.*/\2/}
 .elif defined(PKGNAME_OLD) && !empty(PKGNAME_OLD:Mnode[0-9]-*) || \
     defined(PKGNAME_OLD) && !empty(PKGNAME_OLD:M*-node[0-9]-*)
-NODE_VERSION_REQD?= ${PKGNAME_OLD:C/(^.*-|^)node([0-9])-.*/\2/}
+NODE_VERSION_REQD?=	${PKGNAME_OLD:C/(^.*-|^)node([0-9])-.*/\2/}
 .endif
 
 .include "../../mk/bsd.prefs.mk"
@@ -63,10 +63,10 @@ NODE_VERSIONS_INCOMPATIBLE?=	# empty
 
 # Resolve NODE_VERSIONS_INCOMPATIBLE and generate the _OK vars.
 .for v in ${NODE_VERSIONS_ACCEPTED}
-.if empty(NODE_VERSIONS_INCOMPATIBLE:M${v})
+.  if empty(NODE_VERSIONS_INCOMPATIBLE:M${v})
 _NODE_VERSION_${v}_OK=		yes
 _NODE_VERSIONS_ACCEPTED+=	${v}
-.endif
+.  endif
 .endfor
 
 # Pick a version

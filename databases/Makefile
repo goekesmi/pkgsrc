@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.567 2018/10/23 16:02:51 adam Exp $
+# $NetBSD: Makefile,v 1.569 2018/12/09 12:16:41 taca Exp $
 
 COMMENT=	Databases
 
@@ -271,6 +271,7 @@ SUBDIR+=	php-pgsql
 SUBDIR+=	php-redis
 SUBDIR+=	php-redis3
 SUBDIR+=	php-rrd
+SUBDIR+=	php-sqlite3
 SUBDIR+=	php-sqlrelay
 SUBDIR+=	phpldapadmin
 SUBDIR+=	phpmyadmin
@@ -348,7 +349,6 @@ SUBDIR+=	py-cx_Oracle
 SUBDIR+=	py-datapkg
 SUBDIR+=	py-elasticsearch
 SUBDIR+=	py-elixir
-SUBDIR+=	py-firebase
 SUBDIR+=	py-gdbm
 SUBDIR+=	py-ldap
 SUBDIR+=	py-ldap3

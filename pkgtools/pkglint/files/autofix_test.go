@@ -1,4 +1,4 @@
-package main
+package pkglint
 
 import (
 	"gopkg.in/check.v1"
@@ -22,8 +22,8 @@ func (s *Suite) Test_Autofix_Warnf__duplicate(c *check.C) {
 func (s *Suite) Test_Autofix__default_leaves_line_unchanged(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--source")
-	mklines := t.SetupFileMkLines("Makefile",
+	t.SetUpCommandLine("--source")
+	mklines := t.SetUpFileMkLines("Makefile",
 		"# row 1 \\",
 		"continuation of row 1")
 	line := mklines.lines.Lines[0]
@@ -50,8 +50,8 @@ func (s *Suite) Test_Autofix__default_leaves_line_unchanged(c *check.C) {
 func (s *Suite) Test_Autofix__show_autofix_modifies_line(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--source", "--show-autofix")
-	mklines := t.SetupFileMkLines("Makefile",
+	t.SetUpCommandLine("--source", "--show-autofix")
+	mklines := t.SetUpFileMkLines("Makefile",
 		"# row 1 \\",
 		"continuation of row 1")
 	line := mklines.lines.Lines[0]
@@ -86,8 +86,8 @@ func (s *Suite) Test_Autofix__show_autofix_modifies_line(c *check.C) {
 func (s *Suite) Test_Autofix_ReplaceAfter__autofix(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix", "--source")
-	mklines := t.SetupFileMkLines("Makefile",
+	t.SetUpCommandLine("--autofix", "--source")
+	mklines := t.SetUpFileMkLines("Makefile",
 		"# line 1 \\",
 		"continuation 1 \\",
 		"continuation 2")
@@ -101,15 +101,15 @@ func (s *Suite) Test_Autofix_ReplaceAfter__autofix(c *check.C) {
 		"AUTOFIX: ~/Makefile:1: Replacing \"n\" with \"v\".",
 		"-\t# line 1 \\",
 		"+\t# live 1 \\",
-		">\tcontinuation 1 \\",
-		">\tcontinuation 2")
+		"\tcontinuation 1 \\",
+		"\tcontinuation 2")
 }
 
 func (s *Suite) Test_Autofix_ReplaceRegex__show_autofix(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix")
-	lines := t.SetupFileLines("Makefile",
+	t.SetUpCommandLine("--show-autofix")
+	lines := t.SetUpFileLines("Makefile",
 		"line1",
 		"line2",
 		"line3")
@@ -137,8 +137,8 @@ func (s *Suite) Test_Autofix_ReplaceRegex__show_autofix(c *check.C) {
 func (s *Suite) Test_Autofix_ReplaceRegex__autofix(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix", "--source")
-	lines := t.SetupFileLines("Makefile",
+	t.SetUpCommandLine("--autofix", "--source")
+	lines := t.SetUpFileLines("Makefile",
 		"line1",
 		"line2",
 		"line3")
@@ -177,8 +177,8 @@ func (s *Suite) Test_Autofix_ReplaceRegex__autofix(c *check.C) {
 func (s *Suite) Test_Autofix_ReplaceRegex__show_autofix_and_source(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
-	lines := t.SetupFileLines("Makefile",
+	t.SetUpCommandLine("--show-autofix", "--source")
+	lines := t.SetUpFileLines("Makefile",
 		"line1",
 		"line2",
 		"line3")
@@ -213,8 +213,8 @@ func (s *Suite) Test_Autofix_ReplaceRegex__show_autofix_and_source(c *check.C) {
 func (s *Suite) Test_SaveAutofixChanges(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix")
-	lines := t.SetupFileLines("example.txt",
+	t.SetUpCommandLine("--autofix")
+	lines := t.SetUpFileLines("example.txt",
 		"line1 := value1",
 		"line2 := value2",
 		"line3 := value3")
@@ -238,8 +238,8 @@ func (s *Suite) Test_SaveAutofixChanges(c *check.C) {
 func (s *Suite) Test_SaveAutofixChanges__no_changes_necessary(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix")
-	lines := t.SetupFileLines("DESCR",
+	t.SetUpCommandLine("--autofix")
+	lines := t.SetUpFileLines("DESCR",
 		"Line 1",
 		"Line 2")
 
@@ -259,9 +259,9 @@ func (s *Suite) Test_SaveAutofixChanges__no_changes_necessary(c *check.C) {
 func (s *Suite) Test_Autofix__multiple_fixes(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--explain")
+	t.SetUpCommandLine("--show-autofix", "--explain")
 
-	line := t.NewLine("fileName", 1, "original")
+	line := t.NewLine("filename", 1, "original")
 
 	c.Check(line.autofix, check.IsNil)
 	c.Check(line.raw, check.DeepEquals, t.NewRawLines(1, "original\n"))
@@ -276,7 +276,7 @@ func (s *Suite) Test_Autofix__multiple_fixes(c *check.C) {
 	c.Check(line.autofix, check.NotNil)
 	c.Check(line.raw, check.DeepEquals, t.NewRawLines(1, "original\n", "lriginao\n"))
 	t.CheckOutputLines(
-		"AUTOFIX: fileName:1: Replacing \"original\" with \"lriginao\".")
+		"AUTOFIX: filename:1: Replacing \"original\" with \"lriginao\".")
 
 	{
 		fix := line.Autofix()
@@ -289,7 +289,7 @@ func (s *Suite) Test_Autofix__multiple_fixes(c *check.C) {
 	c.Check(line.raw, check.DeepEquals, t.NewRawLines(1, "original\n", "lruginao\n"))
 	c.Check(line.raw[0].textnl, equals, "lruginao\n")
 	t.CheckOutputLines(
-		"AUTOFIX: fileName:1: Replacing \"i\" with \"u\".")
+		"AUTOFIX: filename:1: Replacing \"i\" with \"u\".")
 
 	{
 		fix := line.Autofix()
@@ -302,7 +302,7 @@ func (s *Suite) Test_Autofix__multiple_fixes(c *check.C) {
 	c.Check(line.raw, check.DeepEquals, t.NewRawLines(1, "original\n", "middle\n"))
 	c.Check(line.raw[0].textnl, equals, "middle\n")
 	t.CheckOutputLines(
-		"AUTOFIX: fileName:1: Replacing \"lruginao\" with \"middle\".")
+		"AUTOFIX: filename:1: Replacing \"lruginao\" with \"middle\".")
 
 	c.Check(line.raw[0].textnl, equals, "middle\n")
 	t.CheckOutputEmpty()
@@ -316,7 +316,7 @@ func (s *Suite) Test_Autofix__multiple_fixes(c *check.C) {
 
 	c.Check(line.Autofix().RawText(), equals, "")
 	t.CheckOutputLines(
-		"AUTOFIX: fileName:1: Deleting this line.")
+		"AUTOFIX: filename:1: Deleting this line.")
 }
 
 func (s *Suite) Test_Autofix_Explain__without_explain_option(c *check.C) {
@@ -338,7 +338,7 @@ func (s *Suite) Test_Autofix_Explain__without_explain_option(c *check.C) {
 func (s *Suite) Test_Autofix_Explain__default(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--explain")
+	t.SetUpCommandLine("--explain")
 	line := t.NewLine("Makefile", 74, "line1")
 
 	fix := line.Autofix()
@@ -358,7 +358,7 @@ func (s *Suite) Test_Autofix_Explain__default(c *check.C) {
 func (s *Suite) Test_Autofix_Explain__show_autofix(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--explain")
+	t.SetUpCommandLine("--show-autofix", "--explain")
 	line := t.NewLine("Makefile", 74, "line1")
 
 	fix := line.Autofix()
@@ -379,7 +379,7 @@ func (s *Suite) Test_Autofix_Explain__show_autofix(c *check.C) {
 func (s *Suite) Test_Autofix_Explain__autofix(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix", "--explain")
+	t.SetUpCommandLine("--autofix", "--explain")
 	line := t.NewLine("Makefile", 74, "line1")
 
 	fix := line.Autofix()
@@ -396,7 +396,7 @@ func (s *Suite) Test_Autofix_Explain__autofix(c *check.C) {
 func (s *Suite) Test_Autofix_Explain__SilentAutofixFormat(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--explain")
+	t.SetUpCommandLine("--explain")
 	line := t.NewLine("example.txt", 1, "Text")
 
 	fix := line.Autofix()
@@ -411,7 +411,7 @@ func (s *Suite) Test_Autofix_Explain__SilentAutofixFormat(c *check.C) {
 func (s *Suite) Test_Autofix_Explain__silent_with_diagnostic(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--explain")
+	t.SetUpCommandLine("--explain")
 	line := t.NewLine("example.txt", 1, "Text")
 
 	fix := line.Autofix()
@@ -438,34 +438,37 @@ func (s *Suite) Test_Autofix_Explain__silent_with_diagnostic(c *check.C) {
 func (s *Suite) Test_Autofix__show_autofix_and_source_continuation_line(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
-	mklines := t.SetupFileMkLines("Makefile",
+	t.SetUpCommandLine("--show-autofix", "--source")
+	mklines := t.SetUpFileMkLines("Makefile",
 		MkRcsID,
 		"# before \\",
 		"The old song \\",
 		"after")
 	line := mklines.lines.Lines[1]
 
-	{
-		fix := line.Autofix()
-		fix.Warnf("Using \"old\" is deprecated.")
-		fix.Replace("old", "new")
-		fix.Apply()
-	}
+	fix := line.Autofix()
+	fix.Warnf("Using \"old\" is deprecated.")
+	fix.Replace("old", "new")
+	fix.Apply()
 
+	// Using a tab for indentation preserves the exact layout in the output
+	// since in pkgsrc Makefiles, tabs are also used in the middle of the line
+	// to align the variable values. Using a single space for indentation would
+	// make some of the lines appear misaligned in the pkglint output although
+	// they are correct in the Makefiles.
 	t.CheckOutputLines(
 		"WARN: ~/Makefile:2--4: Using \"old\" is deprecated.",
 		"AUTOFIX: ~/Makefile:3: Replacing \"old\" with \"new\".",
-		">\t# before \\",
+		"\t# before \\",
 		"-\tThe old song \\",
 		"+\tThe new song \\",
-		">\tafter")
+		"\tafter")
 }
 
 func (s *Suite) Test_Autofix_InsertBefore(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
+	t.SetUpCommandLine("--show-autofix", "--source")
 	line := t.NewLine("Makefile", 30, "original")
 
 	fix := line.Autofix()
@@ -483,7 +486,7 @@ func (s *Suite) Test_Autofix_InsertBefore(c *check.C) {
 func (s *Suite) Test_Autofix_Delete(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
+	t.SetUpCommandLine("--show-autofix", "--source")
 	line := t.NewLine("Makefile", 30, "to be deleted")
 
 	fix := line.Autofix()
@@ -501,8 +504,8 @@ func (s *Suite) Test_Autofix_Delete(c *check.C) {
 func (s *Suite) Test_Autofix_Delete__continuation_line(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
-	mklines := t.SetupFileMkLines("Makefile",
+	t.SetUpCommandLine("--show-autofix", "--source")
+	mklines := t.SetUpFileMkLines("Makefile",
 		MkRcsID,
 		"# line 1 \\",
 		"continued")
@@ -524,7 +527,7 @@ func (s *Suite) Test_Autofix_Delete__continuation_line(c *check.C) {
 func (s *Suite) Test_Autofix_Delete__combined_with_insert(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
+	t.SetUpCommandLine("--show-autofix", "--source")
 	line := t.NewLine("Makefile", 30, "to be deleted")
 
 	fix := line.Autofix()
@@ -549,7 +552,7 @@ func (s *Suite) Test_Autofix_Delete__combined_with_insert(c *check.C) {
 func (s *Suite) Test_Autofix__suppress_unfixable_warnings(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--show-autofix", "--source")
+	t.SetUpCommandLine("--show-autofix", "--source")
 	lines := t.NewLines("Makefile",
 		"line1",
 		"line2",
@@ -626,7 +629,7 @@ func (s *Suite) Test_Autofix_Custom__in_memory(c *check.C) {
 	t.CheckOutputLines(
 		"WARN: Makefile:1: Please write in ALL-UPPERCASE.")
 
-	t.SetupCommandLine("--show-autofix")
+	t.SetUpCommandLine("--show-autofix")
 
 	doFix(lines.Lines[1])
 
@@ -635,7 +638,7 @@ func (s *Suite) Test_Autofix_Custom__in_memory(c *check.C) {
 		"AUTOFIX: Makefile:2: Converting to uppercase")
 	c.Check(lines.Lines[1].Text, equals, "LINE2")
 
-	t.SetupCommandLine("--autofix")
+	t.SetUpCommandLine("--autofix")
 
 	doFix(lines.Lines[2])
 
@@ -648,9 +651,9 @@ func (s *Suite) Test_Autofix_Custom__in_memory(c *check.C) {
 func (s *Suite) Test_Autofix_skip(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--only", "few", "--autofix")
+	t.SetUpCommandLine("--only", "few", "--autofix")
 
-	mklines := t.SetupFileMkLines("fileName",
+	mklines := t.SetUpFileMkLines("filename",
 		"VAR=\t111 222 333 444 555 \\",
 		"666")
 	lines := mklines.lines
@@ -675,7 +678,7 @@ func (s *Suite) Test_Autofix_skip(c *check.C) {
 	SaveAutofixChanges(lines)
 
 	t.CheckOutputEmpty()
-	t.CheckFileLines("fileName",
+	t.CheckFileLines("filename",
 		"VAR=\t111 222 333 444 555 \\",
 		"666")
 	c.Check(fix.RawText(), equals, ""+
@@ -688,7 +691,7 @@ func (s *Suite) Test_Autofix_skip(c *check.C) {
 func (s *Suite) Test_Autofix_Apply__only(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix", "--source", "--only", "interesting")
+	t.SetUpCommandLine("--autofix", "--source", "--only", "interesting")
 	line := t.NewLine("Makefile", 27, "The old song")
 
 	// Is completely ignored, including any autofixes.
@@ -710,7 +713,7 @@ func (s *Suite) Test_Autofix_Apply__only(c *check.C) {
 func (s *Suite) Test_Autofix_Apply__panic(c *check.C) {
 	t := s.Init(c)
 
-	line := t.NewLine("fileName", 123, "text")
+	line := t.NewLine("filename", 123, "text")
 
 	t.ExpectPanic(
 		func() {
@@ -743,7 +746,7 @@ func (s *Suite) Test_Autofix_Apply__panic(c *check.C) {
 func (s *Suite) Test_Autofix_Apply__explanation_followed_by_note(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--source")
+	t.SetUpCommandLine("--source")
 	line := t.NewLine("README.txt", 123, "text")
 
 	fix := line.Autofix()
@@ -765,8 +768,8 @@ func (s *Suite) Test_Autofix_Apply__explanation_followed_by_note(c *check.C) {
 func (s *Suite) Test_SaveAutofixChanges__file_removed(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix")
-	lines := t.SetupFileLines("subdir/file.txt",
+	t.SetUpCommandLine("--autofix")
+	lines := t.SetUpFileLines("subdir/file.txt",
 		"line 1")
 	_ = os.RemoveAll(t.File("subdir"))
 
@@ -789,8 +792,8 @@ func (s *Suite) Test_SaveAutofixChanges__file_busy_Windows(c *check.C) {
 		return
 	}
 
-	t.SetupCommandLine("--autofix")
-	lines := t.SetupFileLines("subdir/file.txt",
+	t.SetUpCommandLine("--autofix")
+	lines := t.SetUpFileLines("subdir/file.txt",
 		"line 1")
 
 	// As long as the file is kept open, it cannot be overwritten or deleted.
@@ -818,8 +821,8 @@ func (s *Suite) Test_SaveAutofixChanges__file_busy_Windows(c *check.C) {
 func (s *Suite) Test_SaveAutofixChanges__cannot_overwrite(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupCommandLine("--autofix")
-	lines := t.SetupFileLines("file.txt",
+	t.SetUpCommandLine("--autofix")
+	lines := t.SetUpFileLines("file.txt",
 		"line 1")
 
 	c.Check(os.RemoveAll(t.File("file.txt")), check.IsNil)
@@ -835,6 +838,83 @@ func (s *Suite) Test_SaveAutofixChanges__cannot_overwrite(c *check.C) {
 	c.Check(t.Output(), check.Matches, ""+
 		"AUTOFIX: ~/file.txt:1: Replacing \"line\" with \"Line\".\n"+
 		"ERROR: ~/file.txt.pkglint.tmp: Cannot overwrite with autofixed content: .*\n")
+}
+
+// Up to 2018-11-25, pkglint in some cases logged only the source without
+// a corresponding warning.
+func (s *Suite) Test_Autofix__lonely_source(c *check.C) {
+	t := s.Init(c)
+
+	t.SetUpCommandLine("-Wall", "--source")
+	G.Logger.Opts.LogVerbose = false // For realistic conditions; otherwise all diagnostics are logged.
+
+	t.SetUpPackage("x11/xorg-cf-files",
+		".include \"../../x11/xorgproto/buildlink3.mk\"")
+	t.SetUpPackage("x11/xorgproto",
+		"DISTNAME=\txorgproto-1.0")
+	t.CreateFileDummyBuildlink3("x11/xorgproto/buildlink3.mk")
+	t.CreateFileLines("x11/xorgproto/builtin.mk",
+		MkRcsID,
+		"",
+		"BUILTIN_PKG:=\txorgproto",
+		"",
+		"PRE_XORGPROTO_LIST_MISSING =\tapplewmproto",
+		"",
+		".for id in ${PRE_XORGPROTO_LIST_MISSING}",
+		".endfor")
+	G.Pkgsrc.LoadInfrastructure()
+	t.Chdir(".")
+
+	G.Check("x11/xorg-cf-files")
+	G.Check("x11/xorgproto")
+
+	t.CheckOutputLines(
+		">\tPRE_XORGPROTO_LIST_MISSING =\tapplewmproto",
+		"NOTE: x11/xorgproto/builtin.mk:5: Unnecessary space after variable name \"PRE_XORGPROTO_LIST_MISSING\".")
+}
+
+// Up to 2018-11-26, pkglint in some cases logged only the source without
+// a corresponding warning.
+func (s *Suite) Test_Autofix__lonely_source_2(c *check.C) {
+	t := s.Init(c)
+
+	t.SetUpCommandLine("-Wall", "--source", "--explain")
+	G.Logger.Opts.LogVerbose = false // For realistic conditions; otherwise all diagnostics are logged.
+
+	t.SetUpPackage("print/tex-bibtex8",
+		"MAKE_FLAGS+=\tCFLAGS=${CFLAGS.${PKGSRC_COMPILER}}")
+	G.Pkgsrc.LoadInfrastructure()
+	t.Chdir(".")
+
+	G.Check("print/tex-bibtex8")
+
+	t.CheckOutputLines(
+		">\tMAKE_FLAGS+=\tCFLAGS=${CFLAGS.${PKGSRC_COMPILER}}",
+		"WARN: print/tex-bibtex8/Makefile:20: Please use ${CFLAGS.${PKGSRC_COMPILER}:Q} instead of ${CFLAGS.${PKGSRC_COMPILER}}.",
+		"",
+		"\tSee the pkgsrc guide, section \"Echoing a string exactly as-is\":",
+		"\thttps://www.NetBSD.org/docs/pkgsrc/pkgsrc.html#echo-literal",
+		"",
+		">\tMAKE_FLAGS+=\tCFLAGS=${CFLAGS.${PKGSRC_COMPILER}}",
+		"WARN: print/tex-bibtex8/Makefile:20: The list variable PKGSRC_COMPILER should not be embedded in a word.",
+		"",
+		"\tWhen a list variable has multiple elements, this expression expands",
+		"\tto something unexpected:",
+		"",
+		"\tExample: ${MASTER_SITE_SOURCEFORGE}directory/ expands to",
+		"",
+		"\t\thttps://mirror1.sf.net/ https://mirror2.sf.net/directory/",
+		"",
+		"\tThe first URL is missing the directory. To fix this, write",
+		"\t\t${MASTER_SITE_SOURCEFORGE:=directory/}.",
+		"",
+		"\tExample: -l${LIBS} expands to",
+		"",
+		"\t\t-llib1 lib2",
+		"",
+		"\tThe second library is missing the -l. To fix this, write",
+		"\t${LIBS:S,^,-l,}.",
+		"")
 }
 
 // RawText returns the raw text of the fixed line, including line ends.

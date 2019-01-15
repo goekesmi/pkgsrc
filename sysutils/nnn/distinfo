@@ -1,0 +1,7 @@
+$NetBSD: distinfo,v 1.2 2019/01/05 19:33:24 bsiegert Exp $
+
+SHA1 (nnn-2.2.tar.gz) = a20b8a660bb8843ce8b85e4c9ee1ea01707481d4
+RMD160 (nnn-2.2.tar.gz) = 29231e10d4de0c8d04163cc94eae8fd0573fa381
+SHA512 (nnn-2.2.tar.gz) = 0144c9f9c29c2ff3818cf14532354e8182f872580ce7c5a06ab8595b4354edc3a4ede3afc667cd0561a3de4d2f34965a9c057f7ac9555d86feff83abaaca5793
+Size (nnn-2.2.tar.gz) = 50955 bytes
+SHA1 (patch-Makefile) = df888894fd091e6a57ceb46aeb3443a369e1c79d

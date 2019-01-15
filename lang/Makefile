@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.499 2018/10/24 08:37:00 leot Exp $
+# $NetBSD: Makefile,v 1.506 2019/01/14 13:11:54 taca Exp $
 #
 
 COMMENT=	Programming languages
@@ -22,10 +22,10 @@ SUBDIR+=	bwbasic
 SUBDIR+=	caml-light
 SUBDIR+=	camlp4
 SUBDIR+=	camlp5
-SUBDIR+=	cbindgen
 SUBDIR+=	ccsh
 SUBDIR+=	cdl3
 SUBDIR+=	chicken
+SUBDIR+=	chicken5
 SUBDIR+=	cim
 SUBDIR+=	cint
 SUBDIR+=	clang
@@ -89,7 +89,7 @@ SUBDIR+=	ghc-bootstrap
 SUBDIR+=	ghc7
 SUBDIR+=	gnat_util
 SUBDIR+=	gnucobol
-#SUBDIR+=	go		# only contains Makefile fragments
+SUBDIR+=	go
 SUBDIR+=	go-hcl
 SUBDIR+=	go110
 SUBDIR+=	go111
@@ -185,9 +185,9 @@ SUBDIR+=	pfe
 SUBDIR+=	pforth
 #SUBDIR+=	php		# only contains Makefile fragments
 SUBDIR+=	php56
-SUBDIR+=	php70
 SUBDIR+=	php71
 SUBDIR+=	php72
+SUBDIR+=	php73
 SUBDIR+=	picoc
 SUBDIR+=	pict
 SUBDIR+=	polyml
@@ -199,6 +199,8 @@ SUBDIR+=	py-execjs
 SUBDIR+=	py-hy
 SUBDIR+=	py-js2py
 SUBDIR+=	py-jsparser
+SUBDIR+=	py-mypy
+SUBDIR+=	py-mypy_extensions
 SUBDIR+=	py-parso
 SUBDIR+=	py-paver
 SUBDIR+=	py-pyrex
@@ -249,6 +251,7 @@ SUBDIR+=	sablevm-classpath-gui
 SUBDIR+=	sather
 SUBDIR+=	sbcl
 SUBDIR+=	scala
+SUBDIR+=	scala-sbt
 SUBDIR+=	scheme48
 SUBDIR+=	scm
 SUBDIR+=	see

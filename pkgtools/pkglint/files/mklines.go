@@ -1,4 +1,4 @@
-package main
+package pkglint
 
 import (
 	"strings"
@@ -10,16 +10,19 @@ type MkLines = *MkLinesImpl
 type MkLinesImpl struct {
 	mklines       []MkLine
 	lines         Lines
-	forVars       map[string]bool // The variables currently used in .for loops
-	target        string          // Current make(1) target
-	vars          Scope
+	target        string            // Current make(1) target; only available during checkAll
+	vars          Scope             //
 	buildDefs     map[string]bool   // Variables that are registered in BUILD_DEFS, to ensure that all user-defined variables are added to it.
 	plistVarAdded map[string]MkLine // Identifiers that are added to PLIST_VARS.
 	plistVarSet   map[string]MkLine // Identifiers for which PLIST.${id} is defined.
 	plistVarSkip  bool              // True if any of the PLIST_VARS identifiers refers to a variable.
 	Tools         *Tools            // Tools defined in file scope.
 	indentation   *Indentation      // Indentation depth of preprocessing directives; only available during MkLines.ForEach.
+	forVars       map[string]bool   // The variables currently used in .for loops; only available during MkLines.checkAll.
 	Once
+
+	// TODO: Consider extracting plistVarAdded, plistVarSet, plistVarSkip into an own type.
+	// TODO: Describe where each of the above fields is valid.
 }
 
 func NewMkLines(lines Lines) MkLines {
@@ -28,13 +31,12 @@ func NewMkLines(lines Lines) MkLines {
 		mklines[i] = NewMkLine(line)
 	}
 
-	tools := NewTools(lines.FileName)
+	tools := NewTools()
 	tools.Fallback(G.Pkgsrc.Tools)
 
 	return &MkLinesImpl{
 		mklines,
 		lines,
-		make(map[string]bool),
 		"",
 		NewScope(),
 		make(map[string]bool),
@@ -43,9 +45,35 @@ func NewMkLines(lines Lines) MkLines {
 		false,
 		tools,
 		nil,
+		make(map[string]bool),
 		Once{}}
 }
 
+// TODO: Consider defining an interface MkLinesChecker (different name, though, since this one confuses even me)
+// that checks a single topic, like:
+//
+//  * PlistVars
+//  * ForLoops
+//  * MakeTargets
+//  * Tools
+//  * Indentation
+//  * LoadTimeVarUse
+//  * Subst
+//  * VarAlign
+//
+// These could be run in parallel to get the diagnostics strictly from top to bottom.
+// Some of the checkers will probably depend on one another.
+//
+// The driving code for these checkers could look like:
+//
+//  ck.Init
+//  ck.BeforeLine
+//  ck.Line
+//  ck.AfterLine
+//  ck.Finish
+
+// UseVar remembers that the given variable is used in the given line.
+// This controls the "defined but not used" warning.
 func (mklines *MkLinesImpl) UseVar(mkline MkLine, varname string) {
 	mklines.vars.Use(varname, mkline)
 	if G.Pkg != nil {
@@ -63,8 +91,8 @@ func (mklines *MkLinesImpl) Check() {
 
 	// In the first pass, all additions to BUILD_DEFS and USE_TOOLS
 	// are collected to make the order of the definitions irrelevant.
-	mklines.DetermineUsedVariables()
-	mklines.DetermineDefinedVariables()
+	mklines.collectUsedVariables()
+	mklines.collectDefinedVariables()
 	mklines.collectPlistVars()
 	mklines.collectElse()
 
@@ -75,19 +103,21 @@ func (mklines *MkLinesImpl) Check() {
 }
 
 func (mklines *MkLinesImpl) checkAll() {
-	allowedTargets := func() map[string]bool {
-		targets := make(map[string]bool)
-		prefixes := [...]string{"pre", "do", "post"}
-		actions := [...]string{"fetch", "extract", "patch", "tools", "wrapper", "configure", "build", "test", "install", "package", "clean"}
-		for _, prefix := range prefixes {
-			for _, action := range actions {
-				targets[prefix+"-"+action] = true
-			}
-		}
-		return targets
-	}()
+	allowedTargets := map[string]bool{
+		"pre-fetch": true, "do-fetch": true, "post-fetch": true,
+		"pre-extract": true, "do-extract": true, "post-extract": true,
+		"pre-patch": true, "do-patch": true, "post-patch": true,
+		"pre-tools": true, "do-tools": true, "post-tools": true,
+		"pre-wrapper": true, "do-wrapper": true, "post-wrapper": true,
+		"pre-configure": true, "do-configure": true, "post-configure": true,
+		"pre-build": true, "do-build": true, "post-build": true,
+		"pre-test": true, "do-test": true, "post-test": true,
+		"pre-install": true, "do-install": true, "post-install": true,
+		"pre-package": true, "do-package": true, "post-package": true,
+		"pre-clean": true, "do-clean": true, "post-clean": true}
+	G.Assertf(len(allowedTargets) == 33, "Error in allowedTargets initialization")
 
-	CheckLineRcsid(mklines.lines.Lines[0], `#[\t ]+`, "# ")
+	mklines.lines.CheckRcsID(0, `#[\t ]+`, "# ")
 
 	substContext := NewSubstContext()
 	var varalign VaralignBlock
@@ -95,12 +125,14 @@ func (mklines *MkLinesImpl) checkAll() {
 
 	lineAction := func(mkline MkLine) bool {
 		if isHacksMk {
+			// Needs to be set here because it is reset in MkLines.ForEach.
 			mklines.Tools.SeenPrefs = true
 		}
 
 		ck := MkLineChecker{mkline}
 		ck.Check()
-		varalign.Check(mkline)
+
+		varalign.Process(mkline)
 		mklines.Tools.ParseToolLine(mkline, false, false)
 
 		switch {
@@ -112,26 +144,12 @@ func (mklines *MkLinesImpl) checkAll() {
 			mkline.Tokenize(mkline.Value(), true) // Just for the side-effect of the warnings.
 			substContext.Varassign(mkline)
 
-			switch mkline.Varcanon() {
-			case "PLIST_VARS":
-				ids := mkline.ValueSplit(resolveVariableRefs(mkline.Value()), "")
-				for _, id := range ids {
-					if !mklines.plistVarSkip && mklines.plistVarSet[id] == nil {
-						mkline.Warnf("%q is added to PLIST_VARS, but PLIST.%s is not defined in this file.", id, id)
-					}
-				}
-
-			case "PLIST.*":
-				id := mkline.Varparam()
-				if !mklines.plistVarSkip && mklines.plistVarAdded[id] == nil {
-					mkline.Warnf("PLIST.%s is defined, but %q is not added to PLIST_VARS in this file.", id, id)
-				}
-			}
+			mklines.checkVarassignPlist(mkline)
 
 		case mkline.IsInclude():
 			mklines.target = ""
 			if G.Pkg != nil {
-				G.Pkg.CheckInclude(mkline, mklines.indentation)
+				G.Pkg.checkIncludeConditionally(mkline, mklines.indentation)
 			}
 
 		case mkline.IsDirective():
@@ -162,7 +180,24 @@ func (mklines *MkLinesImpl) checkAll() {
 	substContext.Finish(NewMkLine(mklines.lines.EOFLine())) // TODO: mklines.EOFLine()
 	varalign.Finish()
 
-	ChecklinesTrailingEmptyLines(mklines.lines)
+	CheckLinesTrailingEmptyLines(mklines.lines)
+}
+
+func (mklines *MkLinesImpl) checkVarassignPlist(mkline MkLine) {
+	switch mkline.Varcanon() {
+	case "PLIST_VARS":
+		for _, id := range mkline.ValueFields(resolveVariableRefs(mkline.Value())) {
+			if !mklines.plistVarSkip && mklines.plistVarSet[id] == nil {
+				mkline.Warnf("%q is added to PLIST_VARS, but PLIST.%s is not defined in this file.", id, id)
+			}
+		}
+
+	case "PLIST.*":
+		id := mkline.Varparam()
+		if !mklines.plistVarSkip && mklines.plistVarAdded[id] == nil {
+			mkline.Warnf("PLIST.%s is defined, but %q is not added to PLIST_VARS in this file.", id, id)
+		}
+	}
 }
 
 // ForEach calls the action for each line, until the action returns false.
@@ -199,7 +234,7 @@ func (mklines *MkLinesImpl) ForEachEnd(action func(mkline MkLine) bool, atEnd fu
 	mklines.indentation = nil
 }
 
-func (mklines *MkLinesImpl) DetermineDefinedVariables() {
+func (mklines *MkLinesImpl) collectDefinedVariables() {
 	if trace.Tracing {
 		defer trace.Call0()()
 	}
@@ -217,9 +252,9 @@ func (mklines *MkLinesImpl) DetermineDefinedVariables() {
 		switch varcanon {
 		case
 			"BUILD_DEFS",
-			"PKG_GROUPS_VARS",
-			"PKG_USERS_VARS":
-			for _, varname := range fields(mkline.Value()) {
+			"PKG_GROUPS_VARS", // see mk/misc/unprivileged.mk
+			"PKG_USERS_VARS":  // see mk/misc/unprivileged.mk
+			for _, varname := range mkline.Fields() {
 				mklines.buildDefs[varname] = true
 				if trace.Tracing {
 					trace.Step1("%q is added to BUILD_DEFS.", varname)
@@ -229,16 +264,16 @@ func (mklines *MkLinesImpl) DetermineDefinedVariables() {
 		case
 			"BUILTIN_FIND_FILES_VAR",
 			"BUILTIN_FIND_HEADERS_VAR":
-			for _, varname := range fields(mkline.Value()) {
+			for _, varname := range mkline.Fields() {
 				mklines.vars.Define(varname, mkline)
 			}
 
 		case "PLIST_VARS":
-			ids := mkline.ValueSplit(resolveVariableRefs(mkline.Value()), "")
-			for _, id := range ids {
+			for _, id := range mkline.ValueFields(resolveVariableRefs(mkline.Value())) {
 				if trace.Tracing {
 					trace.Step1("PLIST.%s is added to PLIST_VARS.", id)
 				}
+
 				if containsVarRef(id) {
 					mklines.UseVar(mkline, "PLIST.*")
 					mklines.plistVarSkip = true
@@ -248,29 +283,29 @@ func (mklines *MkLinesImpl) DetermineDefinedVariables() {
 			}
 
 		case "SUBST_VARS.*":
-			for _, svar := range fields(mkline.Value()) {
-				mklines.UseVar(mkline, varnameCanon(svar))
+			for _, substVar := range mkline.Fields() {
+				mklines.UseVar(mkline, varnameCanon(substVar))
 				if trace.Tracing {
-					trace.Step1("varuse %s", svar)
+					trace.Step1("varuse %s", substVar)
 				}
 			}
 
 		case "OPSYSVARS":
-			for _, osvar := range fields(mkline.Value()) {
-				mklines.UseVar(mkline, osvar+".*")
-				defineVar(mkline, osvar)
+			for _, opsysVar := range mkline.Fields() {
+				mklines.UseVar(mkline, opsysVar+".*")
+				defineVar(mkline, opsysVar)
 			}
 		}
 	}
 }
 
 func (mklines *MkLinesImpl) collectPlistVars() {
+	// TODO: The PLIST_VARS code above looks very similar.
 	for _, mkline := range mklines.mklines {
 		if mkline.IsVarassign() {
 			switch mkline.Varcanon() {
 			case "PLIST_VARS":
-				ids := mkline.ValueSplit(resolveVariableRefs(mkline.Value()), "")
-				for _, id := range ids {
+				for _, id := range mkline.ValueFields(resolveVariableRefs(mkline.Value())) {
 					if containsVarRef(id) {
 						mklines.plistVarSkip = true
 					} else {
@@ -292,27 +327,36 @@ func (mklines *MkLinesImpl) collectPlistVars() {
 func (mklines *MkLinesImpl) collectElse() {
 	// Make a dry-run over the lines, which sets data.elseLine (in mkline.go) as a side-effect.
 	mklines.ForEach(func(mkline MkLine) {})
+	// TODO: Check whether this ForEach is redundant because it is already run somewhere else.
 }
 
-func (mklines *MkLinesImpl) DetermineUsedVariables() {
+func (mklines *MkLinesImpl) collectUsedVariables() {
 	for _, mkline := range mklines.mklines {
 		for _, varname := range mkline.DetermineUsedVariables() {
 			mklines.UseVar(mkline, varname)
 		}
 	}
 
-	mklines.determineDocumentedVariables()
+	mklines.collectDocumentedVariables()
 }
 
-// Loosely based on mk/help/help.awk, revision 1.28
-func (mklines *MkLinesImpl) determineDocumentedVariables() {
+// collectDocumentedVariables collects the variables that are mentioned in the human-readable
+// documentation of the Makefile fragments from the pkgsrc infrastructure.
+//
+// Loosely based on mk/help/help.awk, revision 1.28, but much simpler.
+func (mklines *MkLinesImpl) collectDocumentedVariables() {
 	scope := NewScope()
 	commentLines := 0
 	relevant := true
 
+	// TODO: Correctly interpret declarations like "package-settable variables:" and
+	// TODO: "user-settable variables", as well as "default: ...", "allowed: ...",
+	// TODO: "list of" and other types.
+
 	finish := func() {
 		if commentLines >= 3 && relevant {
 			for varname, mkline := range scope.used {
+				mklines.vars.Define(varname, mkline)
 				mklines.vars.Use(varname, mkline)
 			}
 		}
@@ -326,23 +370,24 @@ func (mklines *MkLinesImpl) determineDocumentedVariables() {
 		text := mkline.Text
 		switch {
 		case hasPrefix(text, "#"):
-			words := fields(text)
+			words := strings.Fields(text)
 			if len(words) <= 1 {
 				break
 			}
 
 			commentLines++
 
-			parser := NewMkParser(mkline.Line, words[1], false)
+			parser := NewMkParser(nil, words[1], false)
 			varname := parser.Varname()
-			if hasSuffix(varname, ".") && parser.repl.AdvanceRegexp(`^<\w+>`) {
+			if hasSuffix(varname, ".") && parser.lexer.SkipRegexp(G.res.Compile(`^<\w+>`)) {
 				varname += "*"
 			}
-			parser.repl.AdvanceStr(":")
+			parser.lexer.SkipByte(':')
 
-			varbase := varnameBase(varname)
-			if varbase == strings.ToUpper(varbase) && matches(varbase, `[A-Z]`) && parser.EOF() {
-				scope.Use(varname, mkline)
+			varcanon := varnameCanon(varname)
+			if varcanon == strings.ToUpper(varcanon) && matches(varcanon, `[A-Z]`) && parser.EOF() {
+				scope.Define(varcanon, mkline)
+				scope.Use(varcanon, mkline)
 			}
 
 			if 1 < len(words) && words[1] == "Copyright" {
@@ -357,8 +402,9 @@ func (mklines *MkLinesImpl) determineDocumentedVariables() {
 	finish()
 }
 
-func (mklines *MkLinesImpl) CheckRedundantVariables() {
+func (mklines *MkLinesImpl) CheckRedundantAssignments() {
 	scope := NewRedundantScope()
+
 	isRelevant := func(old, new MkLine) bool {
 		if old.Basename != "Makefile" && new.Basename == "Makefile" {
 			return false
@@ -368,18 +414,21 @@ func (mklines *MkLinesImpl) CheckRedundantVariables() {
 		}
 		return true
 	}
+
 	scope.OnIgnore = func(old, new MkLine) {
 		if isRelevant(old, new) && old.Value() == new.Value() {
 			old.Notef("Definition of %s is redundant because of %s.", new.Varname(), old.RefTo(new))
 		}
 	}
+
 	scope.OnOverwrite = func(old, new MkLine) {
 		if isRelevant(old, new) {
 			old.Warnf("Variable %s is overwritten in %s.", new.Varname(), old.RefTo(new))
-			Explain(
+			G.Explain(
 				"The variable definition in this line does not have an effect since",
-				"it is overwritten elsewhere.  This typically happens because of a",
-				"typo (writing = instead of +=) or because the line that overwrites",
+				"it is overwritten elsewhere.",
+				"This typically happens because of a typo (writing = instead of +=)",
+				"or because the line that overwrites",
 				"is in another file that is used by several packages.")
 		}
 	}
@@ -387,6 +436,8 @@ func (mklines *MkLinesImpl) CheckRedundantVariables() {
 	mklines.ForEach(scope.Handle)
 }
 
+// CheckForUsedComment checks that this file (a Makefile.common) has the given
+// relativeName in one of the "# used by" comments at the beginning of the file.
 func (mklines *MkLinesImpl) CheckForUsedComment(relativeName string) {
 	lines := mklines.lines
 	if lines.Len() < 3 {
@@ -405,17 +456,21 @@ func (mklines *MkLinesImpl) CheckForUsedComment(relativeName string) {
 		i++
 	}
 
+	// TODO: Sort the comments.
+	// TODO: Discuss whether these comments are actually helpful.
+
 	fix := lines.Lines[i].Autofix()
 	fix.Warnf("Please add a line %q here.", expected)
 	fix.Explain(
 		"Since Makefile.common files usually don't have any comments and",
-		"therefore not a clearly defined interface, they should at least",
+		"therefore not a clearly defined purpose, they should at least",
 		"contain references to all files that include them, so that it is",
 		"easier to see what effects future changes may have.",
 		"",
 		"If there are more than five packages that use a Makefile.common,",
-		"you should think about giving it a proper name (maybe plugin.mk) and",
-		"documenting its interface.")
+		"that file should have a clearly defined and documented purpose,",
+		"and the filename should reflect that purpose.",
+		"Typical names are module.mk, plugin.mk or version.mk.")
 	fix.InsertBefore(expected)
 	fix.Apply()
 
@@ -448,7 +503,7 @@ type varalignBlockInfo struct {
 	continuation   bool   // A continuation line with no value in the first line.
 }
 
-func (va *VaralignBlock) Check(mkline MkLine) {
+func (va *VaralignBlock) Process(mkline MkLine) {
 	switch {
 	case !G.Opts.WarnSpace:
 		return
@@ -457,21 +512,20 @@ func (va *VaralignBlock) Check(mkline MkLine) {
 		va.Finish()
 		return
 
-	case mkline.IsCommentedVarassign():
-		break
+	case mkline.IsVarassign(), mkline.IsCommentedVarassign():
+		va.processVarassign(mkline)
 
-	case mkline.IsComment():
+	case mkline.IsComment(), mkline.IsDirective():
 		return
 
-	case mkline.IsDirective():
-		return
-
-	case !mkline.IsVarassign():
+	default:
 		trace.Stepf("Skipping")
 		va.skip = true
 		return
 	}
+}
 
+func (va *VaralignBlock) processVarassign(mkline MkLine) {
 	switch {
 	case mkline.Op() == opAssignEval && matches(mkline.Varname(), `^[a-z]`):
 		// Arguments to procedures do not take part in block alignment.
@@ -494,8 +548,7 @@ func (va *VaralignBlock) Check(mkline MkLine) {
 
 	continuation := false
 	if mkline.IsMultiline() {
-		// Interpreting the continuation marker as variable value
-		// is cheating but works well.
+		// Parsing the continuation marker as variable value is cheating but works well.
 		text := strings.TrimSuffix(mkline.raw[0].orignl, "\n")
 		m, _, _, _, _, _, value, _, _ := MatchVarassign(text)
 		continuation = m && value == "\\"
@@ -581,14 +634,14 @@ func (va *VaralignBlock) optimalWidth(infos []*varalignBlockInfo) int {
 	if trace.Tracing {
 		trace.Stepf("Indentation including whitespace is between %d and %d.",
 			minTotalWidth, maxTotalWidth)
-		trace.Stepf("Minimum required indentation is %d + 1.",
-			minVarnameOpWidth)
+		trace.Stepf("Minimum required indentation is %d + 1.", minVarnameOpWidth)
 		if outlier != 0 {
 			trace.Stepf("The outlier is at indentation %d.", outlier)
 		}
 	}
 
 	if minTotalWidth > minVarnameOpWidth && minTotalWidth == maxTotalWidth && minTotalWidth%8 == 0 {
+		// The whole paragraph is already indented to the same width.
 		return minTotalWidth
 	}
 
@@ -643,15 +696,17 @@ func (va *VaralignBlock) realignInitialLine(mkline MkLine, varnameOp string, old
 
 	if wrongColumn {
 		fix.Explain(
-			"Normally, all variable values in a block should start at the same",
-			"column.  There are some exceptions to this rule:",
+			"Normally, all variable values in a block should start at the same column.",
+			"This provides orientation, especially for sequences",
+			"of variables that often appear in the same order.",
+			"For these it suffices to look at the variable values only.",
 			"",
-			"Definitions for long variable names may be indented with a single",
-			"space instead of tabs, but only if they appear in a block that is",
-			"otherwise indented using tabs.",
+			"There are some exceptions to this rule:",
 			"",
-			"Variable definitions that span multiple lines are not checked for",
-			"alignment at all.",
+			"Definitions for long variable names may be indented with a single space instead of tabs,",
+			"but only if they appear in a block that is otherwise indented using tabs.",
+			"",
+			"Variable definitions that span multiple lines are not checked for alignment at all.",
 			"",
 			"When the block contains something else than variable definitions",
 			"and directives like .if or .for, it is not checked at all.")

@@ -1,6 +1,7 @@
-# $NetBSD: Makefile,v 1.2 2018/06/16 06:19:32 adam Exp $
+# $NetBSD: Makefile,v 1.5 2018/12/10 16:23:50 maya Exp $
 
 PKGNAME=	${DISTNAME:S/ffmpeg/ffplay4/}
+PKGREVISION=	3
 MAINTAINER=	pkgsrc-users@NetBSD.org
 HOMEPAGE=	https://ffmpeg.org/
 COMMENT=	Simple SDL frontend for FFmpeg

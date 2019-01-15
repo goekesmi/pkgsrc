@@ -1,7 +1,6 @@
-# $NetBSD: Makefile,v 1.269 2018/11/14 22:21:27 kleink Exp $
+# $NetBSD: Makefile,v 1.274 2019/01/14 22:58:02 wiz Exp $
 
-DISTNAME=		gnucash-3.3
-PKGREVISION=		5
+DISTNAME=		gnucash-3.4
 CATEGORIES=		finance
 MASTER_SITES=		${MASTER_SITE_SOURCEFORGE:=gnucash/}
 EXTRACT_SUFX=		.tar.bz2
@@ -32,6 +31,8 @@ TEST_TARGET=		check
 
 LDFLAGS+=		${COMPILER_RPATH_FLAG}${PREFIX}/lib/gnucash
 CXXFLAGS+=		-Wno-deprecated-declarations
+# https://bugs.gnucash.org/show_bug.cgi?id=797039
+CFLAGS+=		-Wno-char-subscripts
 
 MAKE_ENV+=		GUILE_AUTO_COMPILE=0
 CMAKE_ARGS+=		-DWITH_AQBANKING=OFF
@@ -78,5 +79,4 @@ BUILDLINK_API_DEPENDS.boost-headers+=   boost-headers>=1.64.0nb3
 .include "../../textproc/libxslt/buildlink3.mk"
 .include "../../www/webkit-gtk/buildlink3.mk"
 .include "../../x11/gtk3/buildlink3.mk"
-.include "../../x11/gtkmm/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

@@ -1,4 +1,4 @@
-package main
+package pkglint
 
 import (
 	"netbsd.org/pkglint/pkgver"
@@ -13,7 +13,7 @@ type Buildlink3Checker struct {
 	abi, api         *DependencyPattern
 }
 
-func ChecklinesBuildlink3Mk(mklines MkLines) {
+func CheckLinesBuildlink3Mk(mklines MkLines) {
 	(&Buildlink3Checker{mklines: mklines}).Check()
 }
 
@@ -64,7 +64,7 @@ func (ck *Buildlink3Checker) Check() {
 
 	if G.Pkg != nil {
 		// TODO: Commenting this line doesn't make any test fail, but it should.
-		G.Pkg.checklinesBuildlink3Inclusion(mklines)
+		G.Pkg.checkLinesBuildlink3Inclusion(mklines)
 	}
 
 	mklines.SaveAutofixChanges()
@@ -162,7 +162,7 @@ func (ck *Buildlink3Checker) checkVarassign(exp *MkExpecter, mkline MkLine, pkgb
 
 	if varname == "BUILDLINK_ABI_DEPENDS."+pkgbase {
 		ck.abiLine = mkline
-		parser := NewParser(mkline.Line, value, false)
+		parser := NewMkParser(nil, value, false)
 		if dp := parser.Dependency(); dp != nil && parser.EOF() {
 			ck.abi = dp
 		}
@@ -171,7 +171,7 @@ func (ck *Buildlink3Checker) checkVarassign(exp *MkExpecter, mkline MkLine, pkgb
 
 	if varname == "BUILDLINK_API_DEPENDS."+pkgbase {
 		ck.apiLine = mkline
-		parser := NewParser(mkline.Line, value, false)
+		parser := NewMkParser(nil, value, false)
 		if dp := parser.Dependency(); dp != nil && parser.EOF() {
 			ck.api = dp
 		}
@@ -218,6 +218,7 @@ func (ck *Buildlink3Checker) checkVaruseInPkgbase(pkgbase string, pkgbaseLine Mk
 		checkSpecificVar("${PHP_PKG_PREFIX}", "php")
 
 	if !warned {
+		// TODO: Replace regex with proper VarUse.
 		if m, varuse := match1(pkgbase, `(\$\{\w+\})`); m {
 			pkgbaseLine.Warnf("Please replace %q with a simple string (also in other variables in this file).", varuse)
 			warned = true
@@ -225,7 +226,7 @@ func (ck *Buildlink3Checker) checkVaruseInPkgbase(pkgbase string, pkgbaseLine Mk
 	}
 
 	if warned {
-		Explain(
+		G.Explain(
 			"The identifiers in the BUILDLINK_TREE variable should be plain",
 			"strings that do not refer to any variable.",
 			"",

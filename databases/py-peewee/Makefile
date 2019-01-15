@@ -1,17 +1,18 @@
-# $NetBSD: Makefile,v 1.46 2018/10/26 11:57:01 jperkin Exp $
+# $NetBSD: Makefile,v 1.50 2019/01/08 08:37:59 adam Exp $
 
-DISTNAME=	peewee-3.7.1
+DISTNAME=	peewee-3.8.1
 PKGNAME=	${PYPKGPREFIX}-${DISTNAME}
 CATEGORIES=	databases python
 MASTER_SITES=	${MASTER_SITE_PYPI:=p/peewee/}
 
-MAINTAINER=	filip@joyent.com
+MAINTAINER=	fhajny@NetBSD.org
 HOMEPAGE=	http://www.peewee-orm.com/
 COMMENT=	Small, expressive ORM for PostgreSQL, MySQL and SQLite
 LICENSE=	mit
 
 BUILD_DEPENDS+=	${PYPKGPREFIX}-sphinx-[0-9]*:../../textproc/py-sphinx
-#TEST_DEPENDS+=	${PYPKGPREFIX}-sqlite3-[0-9]*:../../databases/py-sqlite3
+DEPENDS+=	${PYPKGPREFIX}-sqlite3-[0-9]*:../../databases/py-sqlite3
+#DEPENDS+=	sqlite3-[0-9]*
 
 MAKE_FLAGS+=	SPHINXBUILD=sphinx-build${PYVERSSUFFIX}
 
@@ -31,13 +32,9 @@ post-build:
 	cd ${WRKSRC}/docs && ${BUILD_MAKE_CMD} man
 
 post-install:
-	cd ${DESTDIR}${PREFIX}/bin && ${MV} pwiz.py pwiz${PYVERSSUFFIX} || ${TRUE}
+	cd ${DESTDIR}${PREFIX}/bin && ${MV} pwiz.py pwiz-${PYVERSSUFFIX} || ${TRUE}
 	${INSTALL_MAN} ${WRKSRC}/docs/_build/man/peewee.1 \
-		${DESTDIR}${PREFIX}/${PKGMANDIR}/man1/peewee${PYVERSSUFFIX}.1
-
-# tests are not included in 3.7.0
-do-test:
-	cd ${WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHONBIN} runtests.py
+		${DESTDIR}${PREFIX}/${PKGMANDIR}/man1/peewee-${PYVERSSUFFIX}.1
 
 .include "../../databases/sqlite3/buildlink3.mk"
 .include "../../devel/py-cython/buildlink3.mk"

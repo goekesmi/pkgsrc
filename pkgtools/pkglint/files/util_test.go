@@ -1,4 +1,4 @@
-package main
+package pkglint
 
 import (
 	"gopkg.in/check.v1"
@@ -51,10 +51,11 @@ func (s *Suite) Test__regex_ReplaceFirst(c *check.C) {
 }
 
 func (s *Suite) Test_mustMatch(c *check.C) {
-	c.Check(
+	t := s.Init(c)
+
+	t.ExpectPanic(
 		func() { mustMatch("aaa", `b`) },
-		check.Panics,
-		"mustMatch \"aaa\" \"b\"")
+		"Pkglint internal error: mustMatch \"aaa\" \"b\"")
 }
 
 func (s *Suite) Test_shorten(c *check.C) {
@@ -74,14 +75,37 @@ func (s *Suite) Test_tabWidth(c *check.C) {
 func (s *Suite) Test_cleanpath(c *check.C) {
 	c.Check(cleanpath("simple/path"), equals, "simple/path")
 	c.Check(cleanpath("/absolute/path"), equals, "/absolute/path")
+
+	// Single dot components are removed, unless it's the only component of the path.
 	c.Check(cleanpath("./././."), equals, ".")
 	c.Check(cleanpath("./././"), equals, ".")
-	c.Check(cleanpath("dir/../dir/../dir/../dir/subdir/../../Makefile"), equals, "dir/../dir/../dir/../Makefile")
 	c.Check(cleanpath("dir/multi/././/file"), equals, "dir/multi/file")
-	c.Check(cleanpath("111/222/../../333/444/../../555/666/../../777/888/9"), equals, "111/222/../../777/888/9")
-	c.Check(cleanpath("1/2/3/../../4/5/6/../../7/8/9/../../../../10"), equals, "1/10")
-	c.Check(cleanpath("cat/pkg.v1/../../cat/pkg.v2/Makefile"), equals, "cat/pkg.v1/../../cat/pkg.v2/Makefile")
 	c.Check(cleanpath("dir/"), equals, "dir")
+
+	// Components like aa/bb/../.. are removed, but not in the initial part of the path,
+	// and only if they are not followed by another "..".
+	c.Check(cleanpath("dir/../dir/../dir/../dir/subdir/../../Makefile"), equals, "dir/../dir/../dir/../Makefile")
+	c.Check(cleanpath("111/222/../../333/444/../../555/666/../../777/888/9"), equals, "111/222/../../777/888/9")
+	c.Check(cleanpath("1/2/3/../../4/5/6/../../7/8/9/../../../../10"), equals, "1/2/3/../../4/7/8/9/../../../../10")
+	c.Check(cleanpath("cat/pkg.v1/../../cat/pkg.v2/Makefile"), equals, "cat/pkg.v1/../../cat/pkg.v2/Makefile")
+	c.Check(cleanpath("aa/../../../../../a/b/c/d"), equals, "aa/../../../../../a/b/c/d")
+	c.Check(cleanpath("aa/bb/../../../../a/b/c/d"), equals, "aa/bb/../../../../a/b/c/d")
+	c.Check(cleanpath("aa/bb/cc/../../../a/b/c/d"), equals, "aa/bb/cc/../../../a/b/c/d")
+	c.Check(cleanpath("aa/bb/cc/dd/../../a/b/c/d"), equals, "aa/bb/a/b/c/d")
+	c.Check(cleanpath("aa/bb/cc/dd/ee/../a/b/c/d"), equals, "aa/bb/cc/dd/ee/../a/b/c/d")
+	c.Check(cleanpath("../../../../../a/b/c/d"), equals, "../../../../../a/b/c/d")
+	c.Check(cleanpath("aa/../../../../a/b/c/d"), equals, "aa/../../../../a/b/c/d")
+	c.Check(cleanpath("aa/bb/../../../a/b/c/d"), equals, "aa/bb/../../../a/b/c/d")
+	c.Check(cleanpath("aa/bb/cc/../../a/b/c/d"), equals, "aa/bb/cc/../../a/b/c/d")
+	c.Check(cleanpath("aa/bb/cc/dd/../a/b/c/d"), equals, "aa/bb/cc/dd/../a/b/c/d")
+	c.Check(cleanpath("aa/../cc/../../a/b/c/d"), equals, "aa/../cc/../../a/b/c/d")
+
+	// The initial 2 components of the path are typically category/package, when
+	// pkglint is called from the pkgsrc top-level directory.
+	// This path serves as the context and therefore is always kept.
+	c.Check(cleanpath("aa/bb/../../cc/dd/../../ee/ff"), equals, "aa/bb/../../ee/ff")
+	c.Check(cleanpath("aa/bb/../../cc/dd/../.."), equals, "aa/bb/../..")
+	c.Check(cleanpath("aa/bb/cc/dd/../.."), equals, "aa/bb")
 }
 
 // Relpath is called so often that handling the most common calls
@@ -101,18 +125,40 @@ func (s *Suite) Test_relpath__failure_on_Windows(c *check.C) {
 	if runtime.GOOS == "windows" {
 		t.ExpectPanic(
 			func() { relpath("c:/", "d:/") },
-			"Pkglint internal error: relpath \"c:/\" \"d:/\".")
+			"Pkglint internal error: relpath \"c:/\" \"d:/\": Rel: can't make d:/ relative to c:/")
 	}
 }
 
-func (s *Suite) Test_abspath__on_Windows(c *check.C) {
+func (s *Suite) Test_abspath__failure_on_Windows(c *check.C) {
 	t := s.Init(c)
 
 	if runtime.GOOS == "windows" {
 		t.ExpectPanic(
 			func() { abspath("file\u0000name") },
-			"Pkglint internal error: abspath \"file\\x00name\".")
+			"Pkglint internal error: abspath \"file\\x00name\": invalid argument")
 	}
+}
+
+func (s *Suite) Test_fileExists(c *check.C) {
+	t := s.Init(c)
+
+	t.CreateFileLines("dir/file")
+
+	t.Check(fileExists(t.File("nonexistent")), equals, false)
+	t.Check(fileExists(t.File("dir")), equals, false)
+	t.Check(fileExists(t.File("dir/nonexistent")), equals, false)
+	t.Check(fileExists(t.File("dir/file")), equals, true)
+}
+
+func (s *Suite) Test_dirExists(c *check.C) {
+	t := s.Init(c)
+
+	t.CreateFileLines("dir/file")
+
+	t.Check(dirExists(t.File("nonexistent")), equals, false)
+	t.Check(dirExists(t.File("dir")), equals, true)
+	t.Check(dirExists(t.File("dir/nonexistent")), equals, false)
+	t.Check(dirExists(t.File("dir/file")), equals, false)
 }
 
 func (s *Suite) Test_isEmptyDir__and_getSubdirs(c *check.C) {
@@ -141,7 +187,7 @@ func (s *Suite) Test_isEmptyDir__and_getSubdirs(c *check.C) {
 	}
 }
 
-func (s *Suite) Test_isEmptyDir__empty_subdir(c *check.C) {
+func (s *Suite) Test_isEmptyDir(c *check.C) {
 	t := s.Init(c)
 
 	t.CreateFileLines("CVS/Entries",
@@ -150,13 +196,17 @@ func (s *Suite) Test_isEmptyDir__empty_subdir(c *check.C) {
 		"dummy")
 
 	c.Check(isEmptyDir(t.File(".")), equals, true)
+	c.Check(isEmptyDir(t.File("CVS")), equals, true)
 }
 
-func (s *Suite) Test__PrefixReplacer_Since(c *check.C) {
-	repl := G.NewPrefixReplacer("hello, world")
-	mark := repl.Mark()
-	repl.AdvanceRegexp(`^\w+`)
-	c.Check(repl.Since(mark), equals, "hello")
+func (s *Suite) Test_getSubdirs(c *check.C) {
+	t := s.Init(c)
+
+	t.CreateFileLines("subdir/file")
+	t.CreateFileLines("empty/file")
+	c.Check(os.Remove(t.File("empty/file")), check.IsNil)
+
+	c.Check(getSubdirs(t.File(".")), deepEquals, []string{"subdir"})
 }
 
 func (s *Suite) Test_detab(c *check.C) {
@@ -235,7 +285,7 @@ func (s *Suite) Test_isLocallyModified(c *check.C) {
 	t := s.Init(c)
 
 	unmodified := t.CreateFileLines("unmodified")
-	modTime := time.Unix(1136239445, 0)
+	modTime := time.Unix(1136239445, 0).UTC()
 
 	err := os.Chtimes(unmodified, modTime, modTime)
 	c.Check(err, check.IsNil)
@@ -244,11 +294,12 @@ func (s *Suite) Test_isLocallyModified(c *check.C) {
 	c.Check(err, check.IsNil)
 
 	// Make sure that the file system has second precision and accuracy.
-	c.Check(st.ModTime(), check.DeepEquals, modTime)
+	c.Check(st.ModTime().UTC(), check.DeepEquals, modTime)
 
 	modified := t.CreateFileLines("modified")
 
 	t.CreateFileLines("CVS/Entries",
+		"//", // Just for code coverage.
 		"/unmodified//"+modTime.Format(time.ANSIC)+"//",
 		"/modified//"+modTime.Format(time.ANSIC)+"//",
 		"/enoent//"+modTime.Format(time.ANSIC)+"//")
@@ -258,6 +309,10 @@ func (s *Suite) Test_isLocallyModified(c *check.C) {
 	c.Check(isLocallyModified(t.File("enoent")), equals, true)
 	c.Check(isLocallyModified(t.File("not_mentioned")), equals, false)
 	c.Check(isLocallyModified(t.File("subdir/file")), equals, false)
+
+	t.DisableTracing()
+
+	c.Check(isLocallyModified(t.File("unmodified")), equals, false)
 }
 
 func (s *Suite) Test_Scope_Defined(c *check.C) {
@@ -307,12 +362,62 @@ func (s *Suite) Test_Scope_DefineAll(c *check.C) {
 	c.Check(dst.Defined("VAR"), equals, true)
 }
 
+func (s *Suite) Test_Scope_FirstDefinition(c *check.C) {
+	t := s.Init(c)
+
+	mkline1 := t.NewMkLine("fname.mk", 3, "VAR=\tvalue")
+	mkline2 := t.NewMkLine("fname.mk", 3, ".if ${VAR::=value}")
+
+	scope := NewScope()
+	scope.Define("VAR", mkline1)
+	scope.Define("SNEAKY", mkline2)
+
+	t.Check(scope.FirstDefinition("VAR"), equals, mkline1)
+
+	// This call returns nil because it's not a variable assignment
+	// and the calling code typically assumes a variable definition.
+	// These sneaky variables with implicit definition are an edge
+	// case that only few people actually know. It's better that way.
+	t.Check(scope.FirstDefinition("SNEAKY"), check.IsNil)
+}
+
+func (s *Suite) Test_Scope__no_tracing(c *check.C) {
+	t := s.Init(c)
+
+	scope := NewScope()
+	scope.Define("VAR.param", t.NewMkLine("fname.mk", 3, "VAR.param=\tvalue"))
+	t.DisableTracing()
+
+	t.Check(scope.DefinedSimilar("VAR.param"), equals, true)
+	t.Check(scope.DefinedSimilar("VAR.other"), equals, true)
+	t.Check(scope.DefinedSimilar("OTHER"), equals, false)
+}
+
 func (s *Suite) Test_naturalLess(c *check.C) {
+	c.Check(naturalLess("", "a"), equals, true)
+	c.Check(naturalLess("a", ""), equals, false)
+
+	c.Check(naturalLess("a", "b"), equals, true)
+	c.Check(naturalLess("b", "a"), equals, false)
+
+	// Numbers are always considered smaller than other characters.
+	c.Check(naturalLess("0", "!"), equals, true)
+	c.Check(naturalLess("!", "0"), equals, false)
+
 	c.Check(naturalLess("0", "a"), equals, true)
 	c.Check(naturalLess("a", "0"), equals, false)
+
+	c.Check(naturalLess("5", "12"), equals, true)
+	c.Check(naturalLess("12", "5"), equals, false)
+
+	c.Check(naturalLess("5", "7"), equals, true)
+	c.Check(naturalLess("7", "5"), equals, false)
+
 	c.Check(naturalLess("000", "0000"), equals, true)
 	c.Check(naturalLess("0000", "000"), equals, false)
+
 	c.Check(naturalLess("000", "000"), equals, false)
+
 	c.Check(naturalLess("00011", "000111"), equals, true)
 	c.Check(naturalLess("00011", "00012"), equals, true)
 }
@@ -335,27 +440,10 @@ func (s *Suite) Test_varnameCanon(c *check.C) {
 	c.Check(varnameCanon(".CURDIR"), equals, ".CURDIR")
 }
 
-func (s *Suite) Test_isalnum(c *check.C) {
-	c.Check(isalnum(""), equals, true)
-	c.Check(isalnum("/"), equals, false)
-	c.Check(isalnum("0"), equals, true)
-	c.Check(isalnum("9"), equals, true)
-	c.Check(isalnum(":"), equals, false)
-	c.Check(isalnum("@"), equals, false)
-	c.Check(isalnum("A"), equals, true)
-	c.Check(isalnum("Z"), equals, true)
-	c.Check(isalnum("["), equals, false)
-	c.Check(isalnum("_"), equals, true)
-	c.Check(isalnum("`"), equals, false)
-	c.Check(isalnum("a"), equals, true)
-	c.Check(isalnum("z"), equals, true)
-	c.Check(isalnum("{"), equals, false)
-	c.Check(isalnum("Hello_world005"), equals, true)
-	c.Check(isalnum("Hello,world005"), equals, false)
-}
-
 func (s *Suite) Test_FileCache(c *check.C) {
 	t := s.Init(c)
+
+	t.EnableTracingToLog()
 
 	cache := NewFileCache(3)
 
@@ -373,13 +461,13 @@ func (s *Suite) Test_FileCache(c *check.C) {
 	linesFromCache := cache.Get("Makefile", 0)
 	c.Check(linesFromCache.FileName, equals, "Makefile")
 	c.Check(linesFromCache.Lines, check.HasLen, 2)
-	c.Check(linesFromCache.Lines[0].FileName, equals, "Makefile")
+	c.Check(linesFromCache.Lines[0].Filename, equals, "Makefile")
 
 	// Cache keys are normalized using path.Clean.
 	linesFromCache2 := cache.Get("./Makefile", 0)
 	c.Check(linesFromCache2.FileName, equals, "./Makefile")
 	c.Check(linesFromCache2.Lines, check.HasLen, 2)
-	c.Check(linesFromCache2.Lines[0].FileName, equals, "./Makefile")
+	c.Check(linesFromCache2.Lines[0].Filename, equals, "./Makefile")
 
 	cache.Put("file1.mk", 0, lines)
 	cache.Put("file2.mk", 0, lines)
@@ -408,14 +496,92 @@ func (s *Suite) Test_FileCache(c *check.C) {
 	c.Check(cache.misses, equals, 5)
 
 	t.CheckOutputLines(
-		"FileCache \"Makefile\" with count 4.",
-		"FileCache \"file1.mk\" with count 2.",
-		"FileCache \"file2.mk\" with count 2.",
-		"FileCache.Evict \"file2.mk\" with count 2.",
-		"FileCache.Evict \"file1.mk\" with count 2.",
-		"FileCache.Halve \"Makefile\" with count 4.")
+		"TRACE:   FileCache \"Makefile\" with count 4.",
+		"TRACE:   FileCache \"file1.mk\" with count 2.",
+		"TRACE:   FileCache \"file2.mk\" with count 2.",
+		"TRACE:   FileCache.Evict \"file2.mk\" with count 2.",
+		"TRACE:   FileCache.Evict \"file1.mk\" with count 2.",
+		"TRACE:   FileCache.Halve \"Makefile\" with count 4.")
 }
 
 func (s *Suite) Test_makeHelp(c *check.C) {
 	c.Check(makeHelp("subst"), equals, confMake+" help topic=subst")
+}
+
+func (s *Suite) Test_hasAlnumPrefix(c *check.C) {
+	t := s.Init(c)
+
+	t.Check(hasAlnumPrefix(""), equals, false)
+	t.Check(hasAlnumPrefix("A"), equals, true)
+	t.Check(hasAlnumPrefix(","), equals, false)
+}
+
+func (s *Suite) Test_Once(c *check.C) {
+	var once Once
+
+	c.Check(once.FirstTime("str"), equals, true)
+	c.Check(once.FirstTime("str"), equals, false)
+	c.Check(once.FirstTimeSlice("str"), equals, false)
+	c.Check(once.FirstTimeSlice("str", "str2"), equals, true)
+	c.Check(once.FirstTimeSlice("str", "str2"), equals, false)
+}
+
+func (s *Suite) Test_wrap(c *check.C) {
+
+	wrapped := wrap(20,
+		"See the pkgsrc guide, section \"Package components, Makefile\":",
+		"https://www.NetBSD.org/doc/pkgsrc/pkgsrc.html#components.Makefile.",
+		"",
+		"For more information, ask on the tech-pkg@NetBSD.org mailing list.",
+		"",
+		"\tpreformatted line 1",
+		"\tpreformatted line 2",
+		"",
+		"    intentionally indented",
+		"*   itemization",
+		"",
+		"Normal",
+		"text",
+		"continues",
+		"here",
+		"with",
+		"linebreaks.",
+		"",
+		"Sentence one.  Sentence two.")
+
+	expected := []string{
+		"See the pkgsrc",
+		"guide, section",
+		"\"Package components,",
+		"Makefile\":",
+		"https://www.NetBSD.org/doc/pkgsrc/pkgsrc.html#components.Makefile.",
+		"",
+		"For more",
+		"information, ask on",
+		"the",
+		"tech-pkg@NetBSD.org",
+		"mailing list.",
+		"",
+		"\tpreformatted line 1",
+		"\tpreformatted line 2",
+		"",
+		"    intentionally indented",
+		"*   itemization",
+		"",
+		"Normal text",
+		"continues here with",
+		"linebreaks.",
+		"",
+		"Sentence one.",
+		"Sentence two."}
+
+	c.Check(wrapped, deepEquals, expected)
+}
+
+func (s *Suite) Test_escapePrintable(c *check.C) {
+	c.Check(escapePrintable(""), equals, "")
+	c.Check(escapePrintable("ASCII only~\n\t"), equals, "ASCII only~\n\t")
+	c.Check(escapePrintable("Beep \u0007 control \u001F"), equals, "Beep <U+0007> control <U+001F>")
+	c.Check(escapePrintable("Bad \xFF character"), equals, "Bad <\\xFF> character")
+	c.Check(escapePrintable("Unicode \uFFFD replacement"), equals, "Unicode <U+FFFD> replacement")
 }

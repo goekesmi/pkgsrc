@@ -1,6 +1,6 @@
-$NetBSD: distinfo,v 1.28 2018/10/25 09:51:03 adam Exp $
+$NetBSD: distinfo,v 1.30 2018/12/11 09:16:06 adam Exp $
 
-SHA1 (reportlab-3.5.9.tar.gz) = 771cffa7a9435ff29b312aa9a98320deca79d0ad
-RMD160 (reportlab-3.5.9.tar.gz) = 386728da9fee497126dbfc1183d94488471e2d09
-SHA512 (reportlab-3.5.9.tar.gz) = afa918bc34bbe2d0f287437c93648832ddf9001334c0267e07c6358198393b5bb5423cd860a736986ce93d78481357937346ca81ed7ba93df765a0d73c61b657
-Size (reportlab-3.5.9.tar.gz) = 2837351 bytes
+SHA1 (reportlab-3.5.12.tar.gz) = d478b729ec0da05eb22750966576fa33cc5ea6b5
+RMD160 (reportlab-3.5.12.tar.gz) = a7fa9e91dae53f87e0f1a81f55c5d9367872f2cd
+SHA512 (reportlab-3.5.12.tar.gz) = c2d20f95cdad112f7528484556a74cb021ee83b177246b83d6b60ef01433cd184770e1c1703a9bfc080ba3058d039a0935468b2f1539d6b87b3f9e9778c5469a
+Size (reportlab-3.5.12.tar.gz) = 2841927 bytes

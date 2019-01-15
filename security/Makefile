@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.688 2018/09/06 13:36:16 adam Exp $
+# $NetBSD: Makefile,v 1.691 2019/01/13 04:24:18 schmonz Exp $
 #
 
 COMMENT=	Security tools
@@ -14,6 +14,7 @@ SUBDIR+=	PACK
 SUBDIR+=	PortableSigner
 SUBDIR+=	R-digest
 SUBDIR+=	TweetNaCl
+SUBDIR+=	acmesh
 SUBDIR+=	aide
 SUBDIR+=	aide06
 SUBDIR+=	amap
@@ -90,6 +91,7 @@ SUBDIR+=	fprint-demo
 SUBDIR+=	fragroute
 SUBDIR+=	fsh
 SUBDIR+=	fwbuilder
+SUBDIR+=	gcr
 SUBDIR+=	gnome-keyring
 SUBDIR+=	gnome-keyring-manager
 SUBDIR+=	gnome-keyring-sharp
@@ -101,6 +103,7 @@ SUBDIR+=	gnupg2
 SUBDIR+=	gnutls
 SUBDIR+=	go-crypt
 SUBDIR+=	go-crypto
+SUBDIR+=	go-mkcert
 SUBDIR+=	go-oauth2
 SUBDIR+=	go-sftp
 SUBDIR+=	google-authenticator

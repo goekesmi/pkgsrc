@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.17 2018/08/22 09:43:12 wiz Exp $
+# $NetBSD: Makefile,v 1.19 2018/12/13 19:51:45 adam Exp $
 
 PKGNAME=	${DISTNAME:S/-/-server-/}
 PKGREVISION=	1
@@ -77,6 +77,7 @@ SUBST_FILES.perlpath+=	scripts/mysqldumpslow.sh
 SUBST_SED.perlpath=	-e 's,@PERL_PATH@,${PERL5},g'
 
 INSTALLATION_DIRS+=	bin
+TEST_TARGET=		test
 
 .include "../../mk/compiler.mk"
 

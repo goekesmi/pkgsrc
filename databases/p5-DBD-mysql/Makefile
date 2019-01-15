@@ -1,7 +1,8 @@
-# $NetBSD: Makefile,v 1.74 2018/09/23 09:21:46 wen Exp $
+# $NetBSD: Makefile,v 1.76 2019/01/06 09:09:16 markd Exp $
 
-DISTNAME=	DBD-mysql-4.048
+DISTNAME=	DBD-mysql-4.049
 PKGNAME=	p5-${DISTNAME:S/mysql/${MYSQL_PKG_PREFIX}/}
+PKGREVISION=	1
 CATEGORIES=	databases perl5
 MASTER_SITES=	${MASTER_SITE_PERL_CPAN:=DBD/}
 

@@ -1,8 +1,8 @@
-# $NetBSD: Makefile,v 1.17 2018/08/22 09:47:14 wiz Exp $
+# $NetBSD: Makefile,v 1.19 2018/12/09 18:52:09 adam Exp $
 #
 
 DISTNAME=	libical-3.0.3
-PKGREVISION=	2
+PKGREVISION=	3
 CATEGORIES=	time
 MASTER_SITES=	${MASTER_SITE_GITHUB:=libical/}
 GITHUB_TAG=	v${PKGVERSION_NOREV}
@@ -16,6 +16,7 @@ USE_TOOLS+=	perl pkg-config
 USE_CMAKE=	yes
 CMAKE_ARGS+= -DUSE_BUILTIN_TZDATA=false
 CMAKE_ARGS+= -DICAL_BUILD_DOCS=false
+CMAKE_ARGS+= -DCMAKE_DISABLE_FIND_PACKAGE_BDB=true
 MAKE_JOBS_SAFE=	no
 
 PKGCONFIG_OVERRIDE+=	libical.pc.in src/libical-glib/libical-glib.pc.in

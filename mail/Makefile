@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.514 2018/11/11 01:59:57 schmonz Exp $
+# $NetBSD: Makefile,v 1.516 2018/12/16 09:06:55 ryoon Exp $
 #
 
 COMMENT=	Electronic mail utilities
@@ -311,6 +311,7 @@ SUBDIR+=	qmail-lint
 SUBDIR+=	qmail-qfilter
 SUBDIR+=	qmail-rejectutils
 SUBDIR+=	qmail-run
+SUBDIR+=	qmail-spp-spf
 SUBDIR+=	qmailanalog
 SUBDIR+=	qmqtool
 SUBDIR+=	qpopper
@@ -375,6 +376,8 @@ SUBDIR+=	thunderbird-enigmail
 SUBDIR+=	thunderbird-l10n
 SUBDIR+=	thunderbird45
 SUBDIR+=	thunderbird45-l10n
+SUBDIR+=	thunderbird52
+SUBDIR+=	thunderbird52-l10n
 SUBDIR+=	tmda
 SUBDIR+=	tnef
 SUBDIR+=	tnef2txt

@@ -1,7 +1,7 @@
-# $NetBSD: Makefile,v 1.43 2018/11/18 18:07:20 adam Exp $
+# $NetBSD: Makefile,v 1.45 2018/12/09 18:52:31 adam Exp $
 
 DISTNAME=	tesseract-4.0.0
-PKGREVISION=	3
+PKGREVISION=	4
 CATEGORIES=	graphics
 MASTER_SITES=	${MASTER_SITE_GITHUB:=tesseract-ocr/}
 DISTFILES=	${DEFAULT_DISTFILES}
@@ -14,6 +14,8 @@ LICENSE=	apache-2.0
 LANGVER=	4.0.0
 DISTFILES+=	tessdata-${LANGVER}${EXTRACT_SUFX}
 SITES.tessdata-${LANGVER}.tar.gz=	-${MASTER_SITES:Q}tessdata/archive/${LANGVER}.tar.gz
+
+BUILD_DEPENDS+=		asciidoc-[0-9]*:../../textproc/asciidoc
 
 USE_LANGUAGES=		c c++
 USE_LIBTOOL=		yes

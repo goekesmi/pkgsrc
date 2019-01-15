@@ -1,6 +1,6 @@
-# $NetBSD: Makefile,v 1.25 2018/11/14 09:25:21 adam Exp $
+# $NetBSD: Makefile,v 1.27 2018/12/27 16:03:38 joerg Exp $
 
-DISTNAME=	Faker-1.0.0
+DISTNAME=	Faker-1.0.1
 PKGNAME=	${PYPKGPREFIX}-${DISTNAME:tl}
 CATEGORIES=	devel python
 MASTER_SITES=	${MASTER_SITE_PYPI:=F/Faker/}
@@ -10,6 +10,7 @@ HOMEPAGE=	https://github.com/joke2k/faker
 COMMENT=	Python package that generates fake data for you
 LICENSE=	mit
 
+BUILD_DEPENDS+=	${PYPKGPREFIX}-test-runner-[0-9]*:../../devel/py-test-runner
 DEPENDS+=	${PYPKGPREFIX}-dateutil>=2.4:../../time/py-dateutil
 DEPENDS+=	${PYPKGPREFIX}-six>=1.10:../../lang/py-six
 DEPENDS+=	${PYPKGPREFIX}-text-unidecode>=1.2:../../textproc/py-text-unidecode

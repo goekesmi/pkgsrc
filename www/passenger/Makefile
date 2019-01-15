@@ -1,7 +1,6 @@
-# $NetBSD: Makefile,v 1.4 2018/08/16 18:55:15 adam Exp $
+# $NetBSD: Makefile,v 1.6 2019/01/06 09:52:50 markd Exp $
 
 COMMENT=		Web and application server for Ruby, Python and Node.js
-PKGREVISION=		1
 
 .include "Makefile.common"
 

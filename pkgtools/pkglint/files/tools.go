@@ -1,7 +1,6 @@
-package main
+package pkglint
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -11,19 +10,32 @@ import (
 // pkgsrc.
 //
 // See `mk/tools/`.
-//
-// TODO: MustUseVarForm does not really depend on the tool but only depends
-// on where the tool is used (load time, run time). This had already been
-// modeled wrong in pkglint 4, more than 10 years ago.
 type Tool struct {
-	Name           string // e.g. "sed", "gzip"
-	Varname        string // e.g. "SED", "GZIP_CMD"
-	MustUseVarForm bool   // True for `echo`, because of many differing implementations.
+	Name    string // e.g. "sed", "gzip"
+	Varname string // e.g. "SED", "GZIP_CMD"
+
+	// Some of the very simple tools (echo, printf, test) differ in their implementations.
+	//
+	// When bmake encounters a "simple" command line, it bypasses the
+	// call to a shell (see devel/bmake/files/compat.c:/useShell/).
+	// Therefore, sometimes the shell builtin is run, and sometimes the
+	// native tool.
+	//
+	// In particular, this decision depends on PKG_DEBUG_LEVEL
+	// since that variable adds a semicolon to the command line, which is
+	// considered one of the characters that force the commands being
+	// executed by the shell. As of December 2018, the list of special characters
+	// is "~#=|^(){};&<>*?[]:$`\\\n".
+	//
+	// To work around this tricky situation, pkglint warns when these shell builtins
+	// are used by their simple names (echo, test) instead of the variable form
+	// (${ECHO}, ${TEST}).
+	MustUseVarForm bool
 	Validity       Validity
 }
 
 func (tool *Tool) String() string {
-	return fmt.Sprintf("%s:%s:%s:%s",
+	return sprintf("%s:%s:%s:%s",
 		tool.Name, tool.Varname, ifelseStr(tool.MustUseVarForm, "var", ""), tool.Validity)
 }
 
@@ -61,8 +73,8 @@ func (tool *Tool) UsableAtLoadTime(seenPrefs bool) bool {
 //  VAR=    ${${TOOL}:sh}     # Probably ok; the :sh modifier is evaluated at
 //                            # run time. But if VAR should ever be evaluated
 //                            # at load time (see the "Not allowed" cases
-//                            # above), it doesn't work. Currently pkglint
-//                            # cannot detect these cases reliably.
+//                            # above), it doesn't work. As of January 2019,
+//                            # pkglint cannot reliably distinguish these cases.
 //
 //  own-target:
 //          ${TOOL}           # Allowed.
@@ -80,16 +92,23 @@ func (tool *Tool) UsableAtRunTime() bool {
 // and remembers whether these tools are defined at all,
 // and whether they are declared to be used via USE_TOOLS.
 type Tools struct {
-	TraceName string           // Only for the trace log
 	byName    map[string]*Tool // "sed" => tool
 	byVarname map[string]*Tool // "GREP_CMD" => tool
 	fallback  *Tools
-	SeenPrefs bool // Determines the effect of adding the tool to USE_TOOLS
+
+	// Determines the effect of adding the tool to USE_TOOLS.
+	//
+	// As long as bsd.prefs.mk has definitely not been included by the current file,
+	// tools added to USE_TOOLS are available at load time, but only after bsd.prefs.mk
+	// has been included.
+	//
+	// Adding a tool to USE_TOOLS _after_ bsd.prefs.mk has been included, on the other
+	// hand, only makes the tool available at run time.
+	SeenPrefs bool
 }
 
-func NewTools(traceName string) *Tools {
+func NewTools() *Tools {
 	return &Tools{
-		traceName,
 		make(map[string]*Tool),
 		make(map[string]*Tool),
 		nil,
@@ -104,7 +123,7 @@ func NewTools(traceName string) *Tools {
 // (e.g. "awk") or by its variable (e.g. ${AWK}).
 func (tr *Tools) Define(name, varname string, mkline MkLine) *Tool {
 	if trace.Tracing {
-		trace.Stepf("Tools.Define for %s: %q %q in %s", tr.TraceName, name, varname, mkline)
+		trace.Stepf("Tools.Define: %q %q in %s", name, varname, mkline)
 	}
 
 	if !tr.IsValidToolName(name) {
@@ -116,14 +135,14 @@ func (tr *Tools) Define(name, varname string, mkline MkLine) *Tool {
 }
 
 func (tr *Tools) def(name, varname string, mustUseVarForm bool, validity Validity) *Tool {
-	fresh := &Tool{name, varname, mustUseVarForm, validity}
+	fresh := Tool{name, varname, mustUseVarForm, validity}
 
 	tool := tr.byName[name]
 	if tool == nil {
-		tool = fresh
+		tool = &fresh
 		tr.byName[name] = tool
 	} else {
-		tr.merge(tool, fresh)
+		tr.merge(tool, &fresh)
 	}
 
 	if tr.fallback != nil {
@@ -155,7 +174,7 @@ func (tr *Tools) merge(target, source *Tool) {
 
 func (tr *Tools) Trace() {
 	if trace.Tracing {
-		defer trace.Call1(tr.TraceName)()
+		defer trace.Call0()()
 	} else {
 		return
 	}
@@ -211,7 +230,7 @@ func (tr *Tools) ParseToolLine(mkline MkLine, fromInfrastructure bool, addToUseT
 		case "_TOOLS.*":
 			if !containsVarRef(varparam) {
 				tr.Define(varparam, "", mkline)
-				for _, tool := range fields(value) {
+				for _, tool := range mkline.ValueFields(value) {
 					tr.Define(tool, "", mkline)
 				}
 			}
@@ -221,7 +240,7 @@ func (tr *Tools) ParseToolLine(mkline MkLine, fromInfrastructure bool, addToUseT
 		}
 
 	case mkline.IsInclude():
-		if IsPrefs(mkline.IncludeFile()) {
+		if IsPrefs(mkline.IncludedFile()) {
 			tr.SeenPrefs = true
 		}
 	}
@@ -240,7 +259,7 @@ func (tr *Tools) parseUseTools(mkline MkLine, createIfAbsent bool, addToUseTools
 		return
 	}
 
-	deps := fields(value)
+	deps := mkline.ValueFields(value)
 
 	// See mk/tools/autoconf.mk:/^\.if !defined/
 	if matches(value, `\bautoconf213\b`) {
@@ -272,6 +291,17 @@ func (tr *Tools) validity(basename string, useTools bool) Validity {
 	}
 }
 
+func (tr *Tools) ByName(name string) *Tool {
+	tool := tr.byName[name]
+	if tool == nil && tr.fallback != nil {
+		fallback := tr.fallback.ByName(name)
+		if fallback != nil {
+			return tr.def(fallback.Name, fallback.Varname, fallback.MustUseVarForm, fallback.Validity)
+		}
+	}
+	return tool
+}
+
 func (tr *Tools) ByVarname(varname string) *Tool {
 	tool := tr.byVarname[varname]
 	if tool == nil && tr.fallback != nil {
@@ -283,16 +313,7 @@ func (tr *Tools) ByVarname(varname string) *Tool {
 	return tool
 }
 
-func (tr *Tools) ByName(name string) *Tool {
-	tool := tr.byName[name]
-	if tool == nil && tr.fallback != nil {
-		fallback := tr.fallback.ByName(name)
-		if fallback != nil {
-			return tr.def(fallback.Name, fallback.Varname, fallback.MustUseVarForm, fallback.Validity)
-		}
-	}
-	return tool
-}
+// TODO: Tools.ByCommand (name or ${VARNAME})
 
 func (tr *Tools) Usable(tool *Tool, time ToolTime) bool {
 	if time == LoadTime {

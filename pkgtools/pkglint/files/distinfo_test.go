@@ -1,8 +1,8 @@
-package main
+package pkglint
 
 import "gopkg.in/check.v1"
 
-func (s *Suite) Test_ChecklinesDistinfo(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo(c *check.C) {
 	t := s.Init(c)
 
 	t.Chdir("category/package")
@@ -11,7 +11,7 @@ func (s *Suite) Test_ChecklinesDistinfo(c *check.C) {
 		"patch contents")
 	t.CreateFileLines("patches/patch-ab",
 		"patch contents")
-	lines := t.SetupFileLines("distinfo",
+	lines := t.SetUpFileLines("distinfo",
 		"should be the RCS ID",
 		"should be empty",
 		"MD5 (distfile.tar.gz) = 12345678901234567890123456789012",
@@ -23,7 +23,7 @@ func (s *Suite) Test_ChecklinesDistinfo(c *check.C) {
 		"SHA1 (patch-nonexistent) = 1234")
 	G.Pkg = NewPackage(".")
 
-	ChecklinesDistinfo(lines)
+	CheckLinesDistinfo(lines)
 
 	t.CheckOutputLines(
 		"ERROR: distinfo:1: Expected \"$"+"NetBSD$\".",
@@ -43,9 +43,9 @@ func (s *Suite) Test_ChecklinesDistinfo(c *check.C) {
 func (s *Suite) Test_distinfoLinesChecker_checkGlobalDistfileMismatch(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupPkgsrc()
-	t.SetupPackage("category/package1")
-	t.SetupPackage("category/package2")
+	t.SetUpPkgsrc()
+	t.SetUpPackage("category/package1")
+	t.SetUpPackage("category/package2")
 	t.CreateFileLines("category/package1/distinfo",
 		RcsID,
 		"",
@@ -85,15 +85,15 @@ func (s *Suite) Test_distinfoLinesChecker_checkGlobalDistfileMismatch(c *check.C
 		"5 errors and 1 warning found.")
 }
 
-func (s *Suite) Test_ChecklinesDistinfo__uncommitted_patch(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo__uncommitted_patch(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupPackage("category/package")
+	t.SetUpPackage("category/package")
 	t.Chdir("category/package")
 	t.CreateFileDummyPatch("patches/patch-aa")
 	t.CreateFileLines("CVS/Entries",
 		"/distinfo/...")
-	t.SetupFileLines("distinfo",
+	t.SetUpFileLines("distinfo",
 		RcsID,
 		"",
 		"SHA1 (patch-aa) = ebbf34b0641bcb508f17d5a27f2bf2a536d810ac")
@@ -104,15 +104,15 @@ func (s *Suite) Test_ChecklinesDistinfo__uncommitted_patch(c *check.C) {
 		"WARN: distinfo:3: patches/patch-aa is registered in distinfo but not added to CVS.")
 }
 
-func (s *Suite) Test_ChecklinesDistinfo__unrecorded_patches(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo__unrecorded_patches(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupPackage("category/package")
+	t.SetUpPackage("category/package")
 	t.Chdir("category/package")
 	t.CreateFileLines("patches/CVS/Entries")
 	t.CreateFileDummyPatch("patches/patch-aa")
 	t.CreateFileDummyPatch("patches/patch-src-Makefile")
-	t.SetupFileLines("distinfo",
+	t.SetUpFileLines("distinfo",
 		RcsID,
 		"",
 		"SHA1 (distfile.tar.gz) = ...",
@@ -130,17 +130,17 @@ func (s *Suite) Test_ChecklinesDistinfo__unrecorded_patches(c *check.C) {
 // The distinfo file and the patches are usually placed in the package
 // directory. By defining PATCHDIR or DISTINFO_FILE, a package can define
 // that they are somewhere else in pkgsrc.
-func (s *Suite) Test_ChecklinesDistinfo__relative_path_in_distinfo(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo__relative_path_in_distinfo(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupPackage("category/package",
+	t.SetUpPackage("category/package",
 		"DISTINFO_FILE=\t../../other/common/distinfo",
 		"PATCHDIR=\t../../devel/patches/patches")
 	t.Remove("category/package/distinfo")
 	t.CreateFileLines("devel/patches/patches/CVS/Entries")
 	t.CreateFileDummyPatch("devel/patches/patches/patch-aa")
 	t.CreateFileDummyPatch("devel/patches/patches/patch-only-in-patches")
-	t.SetupFileLines("other/common/distinfo",
+	t.SetUpFileLines("other/common/distinfo",
 		RcsID,
 		"",
 		"SHA1 (patch-aa) = ...",
@@ -160,17 +160,17 @@ func (s *Suite) Test_ChecklinesDistinfo__relative_path_in_distinfo(c *check.C) {
 
 // When the distinfo file and the patches are placed in the same package,
 // their diagnostics use short relative paths.
-func (s *Suite) Test_ChecklinesDistinfo__distinfo_and_patches_in_separate_directory(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo__distinfo_and_patches_in_separate_directory(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupPackage("category/package",
+	t.SetUpPackage("category/package",
 		"DISTINFO_FILE=\t../../other/common/distinfo",
 		"PATCHDIR=\t../../other/common/patches")
 	t.Remove("category/package/distinfo")
 	t.CreateFileLines("other/common/patches/CVS/Entries")
 	t.CreateFileDummyPatch("other/common/patches/patch-aa")
 	t.CreateFileDummyPatch("other/common/patches/patch-only-in-patches")
-	t.SetupFileLines("other/common/distinfo",
+	t.SetUpFileLines("other/common/distinfo",
 		RcsID,
 		"",
 		"SHA1 (patch-aa) = ...",
@@ -188,17 +188,17 @@ func (s *Suite) Test_ChecklinesDistinfo__distinfo_and_patches_in_separate_direct
 			"is not recorded. Run \""+confMake+" makepatchsum\".")
 }
 
-func (s *Suite) Test_ChecklinesDistinfo__manual_patches(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo__manual_patches(c *check.C) {
 	t := s.Init(c)
 
 	t.Chdir("category/package")
 	t.CreateFileLines("patches/manual-libtool.m4")
-	lines := t.SetupFileLines("distinfo",
+	lines := t.SetUpFileLines("distinfo",
 		RcsID,
 		"",
 		"SHA1 (patch-aa) = ...")
 
-	ChecklinesDistinfo(lines)
+	CheckLinesDistinfo(lines)
 
 	// When a distinfo file is checked on its own, without belonging to a package,
 	// the PATCHDIR is not known and therefore no diagnostics are logged.
@@ -206,7 +206,7 @@ func (s *Suite) Test_ChecklinesDistinfo__manual_patches(c *check.C) {
 
 	G.Pkg = NewPackage(".")
 
-	ChecklinesDistinfo(lines)
+	CheckLinesDistinfo(lines)
 
 	// When a distinfo file is checked in the context of a package,
 	// the PATCHDIR is known, therefore the check is active.
@@ -220,11 +220,11 @@ func (s *Suite) Test_ChecklinesDistinfo__manual_patches(c *check.C) {
 // infrastructure, there is nothing a package author can do about.
 //
 // XXX: Re-check the documentation for this test.
-func (s *Suite) Test_ChecklinesDistinfo__missing_php_patches(c *check.C) {
+func (s *Suite) Test_CheckLinesDistinfo__missing_php_patches(c *check.C) {
 	t := s.Init(c)
 
-	t.SetupPkgsrc()
-	t.SetupCommandLine("-Wall,no-space")
+	t.SetUpPkgsrc()
+	t.SetUpCommandLine("-Wall,no-space")
 	t.CreateFileLines("licenses/unknown-license")
 	t.CreateFileLines("lang/php/ext.mk",
 		MkRcsID,
@@ -255,7 +255,7 @@ func (s *Suite) Test_ChecklinesDistinfo__missing_php_patches(c *check.C) {
 		".include \"../../lang/php/ext.mk\"",
 		".include \"../../mk/bsd.pkg.mk\"")
 
-	G.CheckDirent(t.File("archivers/php-bz2"))
+	G.Check(t.File("archivers/php-bz2"))
 
 	t.CreateFileLines("archivers/php-zlib/Makefile",
 		MkRcsID,
@@ -263,7 +263,7 @@ func (s *Suite) Test_ChecklinesDistinfo__missing_php_patches(c *check.C) {
 		".include \"../../lang/php/ext.mk\"",
 		".include \"../../mk/bsd.pkg.mk\"")
 
-	G.CheckDirent(t.File("archivers/php-zlib"))
+	G.Check(t.File("archivers/php-zlib"))
 
 	t.CheckOutputEmpty()
 }
@@ -274,7 +274,7 @@ func (s *Suite) Test_distinfoLinesChecker_checkPatchSha1(c *check.C) {
 	G.Pkg = NewPackage(t.File("category/package"))
 	distinfoLine := t.NewLine(t.File("category/package/distinfo"), 5, "")
 
-	checker := &distinfoLinesChecker{}
+	checker := distinfoLinesChecker{}
 	checker.checkPatchSha1(distinfoLine, "patch-nonexistent", "distinfo-sha1")
 
 	t.CheckOutputLines(

@@ -1,6 +1,6 @@
 #!@RCD_SCRIPTS_SHELL@
 #
-# $NetBSD: qmailsend.sh,v 1.13 2018/11/03 17:08:26 schmonz Exp $
+# $NetBSD: qmailsend.sh,v 1.17 2018/12/16 05:32:07 schmonz Exp $
 #
 # @PKGNAME@ script to control qmail-send (local and outgoing mail).
 #
@@ -12,7 +12,7 @@
 name="qmailsend"
 
 # User-settable rc.conf variables and their default values:
-: ${qmailsend_postenv:="PATH=@PREFIX@/bin:$PATH"}
+: ${qmailsend_postenv:="QMAILREMOTE=@PREFIX@/bin/qmail-remote"}
 : ${qmailsend_defaultdelivery:="`@HEAD@ -1 @PKG_SYSCONFDIR@/control/defaultdelivery`"}
 : ${qmailsend_log:="YES"}
 : ${qmailsend_logcmd:="logger -t nbqmail/send -p mail.info"}
@@ -40,37 +40,33 @@ alrm_cmd="qmailsend_doqueue"
 flush_cmd="qmailsend_doqueue"
 hup_cmd="qmailsend_hup"
 
-qmailsend_prestart()
-{
+qmailsend_prestart() {
 	if [ -f /etc/rc.subr ] && ! checkyesno qmailsend_log; then
 		qmailsend_logcmd=${qmailsend_nologcmd}
 	fi
+	@MKDIR@ "@VARBASE@/run"
 	# qmail-start(8) starts the various qmail processes, then execs
 	# qmail-send(8). That's the process we want to signal later.
-	command="@PREFIX@/bin/pgrphack @SETENV@ - ${qmailsend_postenv}
-qmail-start '$qmailsend_defaultdelivery'
+	command="@PREFIX@/bin/pgrphack @SETENV@ - PATH=@PREFIX@/bin:$PATH ${qmailsend_postenv} \
+qmail-start '$qmailsend_defaultdelivery' \
 ${qmailsend_logcmd}"
 	command_args="&"
 	rc_flags=""
 }
 
-qmailsend_poststart()
-{
+qmailsend_poststart() {
 	echo $! > ${pidfile}
 }
 
-qmailsend_poststop()
-{
+qmailsend_poststop() {
 	rm -f ${pidfile}
 }
 
-qmailsend_stat()
-{
+qmailsend_stat() {
 	run_rc_command status
 }
 
-qmailsend_pause()
-{
+qmailsend_pause() {
 	if ! statusmsg=`run_rc_command status`; then
 		@ECHO@ $statusmsg
 		return 1
@@ -79,8 +75,7 @@ qmailsend_pause()
 	kill -STOP $rc_pid
 }
 
-qmailsend_cont()
-{
+qmailsend_cont() {
 	if ! statusmsg=`run_rc_command status`; then
 		@ECHO@ $statusmsg
 		return 1
@@ -89,8 +84,7 @@ qmailsend_cont()
 	kill -CONT $rc_pid
 }
 
-qmailsend_doqueue()
-{
+qmailsend_doqueue() {
 	if ! statusmsg=`run_rc_command status`; then
 		@ECHO@ $statusmsg
 		return 1
@@ -100,14 +94,12 @@ qmailsend_doqueue()
 	kill -ALRM $rc_pid
 }
 
-qmailsend_queue()
-{
+qmailsend_queue() {
 	@PREFIX@/bin/qmail-qstat
 	@PREFIX@/bin/qmail-qread
 }
 
-qmailsend_hup()
-{
+qmailsend_hup() {
 	run_rc_command reload
 }
 

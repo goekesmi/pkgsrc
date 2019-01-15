@@ -1,6 +1,6 @@
-$NetBSD: distinfo,v 1.3 2018/01/28 15:30:07 wiz Exp $
+$NetBSD: distinfo,v 1.5 2018/12/03 11:12:44 wiz Exp $
 
-SHA1 (gmime-3.2.0.tar.xz) = 78cf0e5fa836720e79c37b8d6b9e531344bce476
-RMD160 (gmime-3.2.0.tar.xz) = e7fd87739a4abaf06cf8212b9ef363e553a118dd
-SHA512 (gmime-3.2.0.tar.xz) = bb45f34b80ff237478602ff05ce0f736373185b7aa260c17aaf00a519d0b75ce9e24b0f6b256ce0f17b613e9f67174c54e302411110bf5f143947591f5f5aa43
-Size (gmime-3.2.0.tar.xz) = 1962544 bytes
+SHA1 (gmime-3.2.3.tar.xz) = d97a1e926f9702761c40bbb963c98424900b6dde
+RMD160 (gmime-3.2.3.tar.xz) = adffc2bdeb1f18c48cd4acc433791f5e368e376f
+SHA512 (gmime-3.2.3.tar.xz) = abaf9059baf0c045d5b62757953ee2fa0779462eb32142bb41be40c376fc7ac2b3e4a56fd66177fbbe1dca35c6168a251542b14a844125c2cfcc9a99888179b4
+Size (gmime-3.2.3.tar.xz) = 2217320 bytes

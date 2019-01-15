@@ -1,4 +1,4 @@
-package main
+package pkglint
 
 import (
 	"path"
@@ -17,9 +17,15 @@ type Vartype struct {
 type KindOfList uint8
 
 const (
-	lkNone  KindOfList = iota // Plain data type
-	lkSpace                   // List entries are separated by whitespace; used in .for loops.
-	lkShell                   // List entries are shell words; used in the :M, :S modifiers.
+	// lkNone is a plain data type, no list at all.
+	lkNone KindOfList = iota
+
+	// lkShell is a compound type, consisting of several space-separated elements.
+	// Elements can have embedded spaces by enclosing them in quotes, like in the shell.
+	//
+	// These lists are used in the :M, :S modifiers, in .for loops,
+	// and as lists of arbitrary things.
+	lkShell
 )
 
 type ACLEntry struct {
@@ -36,10 +42,10 @@ const (
 	aclpUseLoadtime                            // OTHER := ${VAR}, OTHER != ${VAR}
 	aclpUse                                    // OTHER = ${VAR}
 	aclpUnknown
-	aclpAll        = aclpAppend | aclpSetDefault | aclpSet | aclpUseLoadtime | aclpUse
-	aclpAllRuntime = aclpAppend | aclpSetDefault | aclpSet | aclpUse
 	aclpAllWrite   = aclpSet | aclpSetDefault | aclpAppend
 	aclpAllRead    = aclpUseLoadtime | aclpUse
+	aclpAll        = aclpAllWrite | aclpAllRead
+	aclpAllRuntime = aclpAll &^ aclpUseLoadtime
 )
 
 func (perms ACLPermissions) Contains(subset ACLPermissions) bool {
@@ -90,6 +96,7 @@ func (vt *Vartype) Union() ACLPermissions {
 	return permissions
 }
 
+// AllowedFiles lists the file patterns in which the given permissions are allowed.
 func (vt *Vartype) AllowedFiles(perms ACLPermissions) string {
 	files := make([]string, 0, len(vt.aclEntries))
 	for _, aclEntry := range vt.aclEntries {
@@ -100,15 +107,12 @@ func (vt *Vartype) AllowedFiles(perms ACLPermissions) string {
 	return strings.Join(files, ", ")
 }
 
-// IsConsideredList returns whether the type is considered a shell list.
+// IsConsideredList returns whether the type is considered a list.
 // This distinction between "real lists" and "considered a list" makes
 // the implementation of checklineMkVartype easier.
 func (vt *Vartype) IsConsideredList() bool {
-	switch vt.kindOfList {
-	case lkShell:
+	if vt.kindOfList == lkShell {
 		return true
-	case lkSpace:
-		return false
 	}
 	switch vt.basicType {
 	case BtAwkCommand, BtSedCommands, BtShellCommand, BtShellCommands, BtLicense, BtConfFiles:
@@ -122,7 +126,7 @@ func (vt *Vartype) MayBeAppendedTo() bool {
 }
 
 func (vt *Vartype) String() string {
-	listPrefix := [...]string{"", "SpaceList of ", "ShellList of "}[vt.kindOfList]
+	listPrefix := [...]string{"", "List of "}[vt.kindOfList]
 	guessedSuffix := ifelseStr(vt.guessed, " (guessed)", "")
 	return listPrefix + vt.basicType.name + guessedSuffix
 }
@@ -140,10 +144,13 @@ func (vt *Vartype) IsShell() bool {
 	return false
 }
 
-// IsBasicSafe returns whether the basic vartype consists only of
-// characters that don't need escaping in most contexts, like A-Za-z0-9-_.
-func (vt *Vartype) IsBasicSafe() bool {
-	switch vt.basicType {
+// NeedsQ returns whether variables of this type need the :Q
+// modifier to be safely embedded in other variables or shell programs.
+//
+// Variables that can consists only of characters like A-Za-z0-9-._
+// don't need the :Q modifier. All others do, for safety reasons.
+func (bt *BasicType) NeedsQ() bool {
+	switch bt {
 	case BtBuildlinkDepmethod,
 		BtCategory,
 		BtDistSuffix,
@@ -172,9 +179,9 @@ func (vt *Vartype) IsBasicSafe() bool {
 		BtWrkdirSubdirectory,
 		BtYesNo,
 		BtYesNoIndirectly:
-		return true
+		return false
 	}
-	return false
+	return !bt.IsEnum()
 }
 
 func (vt *Vartype) IsPlainString() bool {
@@ -193,12 +200,18 @@ type BasicType struct {
 func (bt *BasicType) IsEnum() bool {
 	return hasPrefix(bt.name, "enum: ")
 }
+
 func (bt *BasicType) HasEnum(value string) bool {
 	return !contains(value, " ") && contains(bt.name, " "+value+" ")
 }
+
 func (bt *BasicType) AllowedEnums() string {
 	return bt.name[6 : len(bt.name)-1]
 }
+
+// TODO: Try to implement BasicType.PossibleChars()
+// TODO: Try to implement BasicType.CanBeEmpty()
+// TODO: Try to implement BasicType.PossibleWords() / PossibleValues()
 
 var (
 	BtAwkCommand             = &BasicType{"AwkCommand", (*VartypeCheck).AwkCommand}
@@ -213,7 +226,7 @@ var (
 	BtDistSuffix             = &BasicType{"DistSuffix", (*VartypeCheck).DistSuffix}
 	BtEmulPlatform           = &BasicType{"EmulPlatform", (*VartypeCheck).EmulPlatform}
 	BtFetchURL               = &BasicType{"FetchURL", (*VartypeCheck).FetchURL}
-	BtFileName               = &BasicType{"FileName", (*VartypeCheck).FileName}
+	BtFileName               = &BasicType{"Filename", (*VartypeCheck).Filename}
 	BtFileMask               = &BasicType{"FileMask", (*VartypeCheck).FileMask}
 	BtFileMode               = &BasicType{"FileMode", (*VartypeCheck).FileMode}
 	BtGccReqd                = &BasicType{"GccReqd", (*VartypeCheck).GccReqd}
@@ -230,7 +243,7 @@ var (
 	BtOption                 = &BasicType{"Option", (*VartypeCheck).Option}
 	BtPathlist               = &BasicType{"Pathlist", (*VartypeCheck).Pathlist}
 	BtPathmask               = &BasicType{"PathMask", (*VartypeCheck).PathMask}
-	BtPathname               = &BasicType{"PathName", (*VartypeCheck).PathName}
+	BtPathname               = &BasicType{"Pathname", (*VartypeCheck).Pathname}
 	BtPerl5Packlist          = &BasicType{"Perl5Packlist", (*VartypeCheck).Perl5Packlist}
 	BtPerms                  = &BasicType{"Perms", (*VartypeCheck).Perms}
 	BtPkgName                = &BasicType{"Pkgname", (*VartypeCheck).Pkgname}
@@ -242,7 +255,6 @@ var (
 	BtRelativePkgDir         = &BasicType{"RelativePkgDir", (*VartypeCheck).RelativePkgDir}
 	BtRelativePkgPath        = &BasicType{"RelativePkgPath", (*VartypeCheck).RelativePkgPath}
 	BtRestricted             = &BasicType{"Restricted", (*VartypeCheck).Restricted}
-	BtSedCommand             = &BasicType{"SedCommand", (*VartypeCheck).SedCommand}
 	BtSedCommands            = &BasicType{"SedCommands", (*VartypeCheck).SedCommands}
 	BtShellCommand           = &BasicType{"ShellCommand", nil}
 	BtShellCommands          = &BasicType{"ShellCommands", nil}
@@ -263,7 +275,11 @@ var (
 	BtYesNoIndirectly        = &BasicType{"YesNoIndirectly", (*VartypeCheck).YesNoIndirectly}
 )
 
-func init() { // Necessary due to circular dependency
+// Necessary due to circular dependencies between the checkers.
+//
+// The Go compiler is stricter than absolutely necessary for this particular case.
+// The following methods are only referred to but not invoked during initialization.
+func init() {
 	BtShellCommand.checker = (*VartypeCheck).ShellCommand
 	BtShellCommands.checker = (*VartypeCheck).ShellCommands
 	BtShellWord.checker = (*VartypeCheck).ShellWord

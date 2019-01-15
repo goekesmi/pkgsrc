@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.266 2018/10/10 20:09:07 maya Exp $
+# $NetBSD: Makefile,v 1.268 2018/12/06 19:53:30 leot Exp $
 #
 
 COMMENT=	Multimedia utilities
@@ -137,6 +137,7 @@ SUBDIR+=	libtheora
 SUBDIR+=	libtheora-docs
 SUBDIR+=	libva
 SUBDIR+=	libva-driver-vdpau
+SUBDIR+=	libva-utils
 SUBDIR+=	libvdpau
 SUBDIR+=	libvpx
 SUBDIR+=	lsdvd
@@ -160,6 +161,7 @@ SUBDIR+=	mplayer-plugin
 SUBDIR+=	mplayer-share
 SUBDIR+=	mplayerthumbs
 SUBDIR+=	mpv
+SUBDIR+=	nostt
 SUBDIR+=	ogle
 SUBDIR+=	ogle_gui
 SUBDIR+=	ogmtools

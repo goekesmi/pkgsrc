@@ -1,9 +1,11 @@
-# $NetBSD: mozilla-common.mk,v 1.120 2018/11/13 13:13:47 wiz Exp $
+# $NetBSD: mozilla-common.mk,v 1.122 2018/12/23 01:11:26 gutteridge Exp $
 #
 # common Makefile fragment for mozilla packages based on gecko 2.0.
 #
 # used by www/firefox/Makefile
 # used by www/seamonkey/Makefile
+
+.include "../../mk/bsd.prefs.mk"
 
 # Python 2.7 and Python 3.5 or later are required simultaneously.
 PYTHON_VERSIONS_ACCEPTED=	27
@@ -22,8 +24,6 @@ CONFIGURE_ARGS+=	--prefix=${PREFIX}
 USE_TOOLS+=		pkg-config perl gmake autoconf213 unzip zip
 USE_LANGUAGES+=		c99 gnu++14
 UNLIMIT_RESOURCES+=	datasize
-
-.include "../../mk/bsd.prefs.mk"
 
 TOOL_DEPENDS+=		cbindgen-[0-9]*:../../devel/cbindgen
 .if ${MACHINE_ARCH} == "sparc64"
@@ -78,9 +78,6 @@ CHECK_PORTABILITY_SKIP+=${MOZILLA_DIR}browser/extensions/loop/run-all-loop-tests
 #CHECK_PORTABILITY_SKIP+=${MOZILLA_DIR}modules/pdfium/update.sh
 
 CONFIGURE_ARGS+=	--enable-default-toolkit=cairo-gtk3
-.if ${OPSYS} != "SunOS"
-CONFIGURE_ARGS+=	--enable-pie
-.endif
 CONFIGURE_ARGS+=	--enable-release
 CONFIGURE_ARGS+=	--enable-rust-simd
 CONFIGURE_ARGS+=	--enable-webrender=build
@@ -216,7 +213,7 @@ BUILDLINK_API_DEPENDS.libevent+=	libevent>=1.1
 BUILDLINK_API_DEPENDS.nspr+=	nspr>=4.19
 .include "../../devel/nspr/buildlink3.mk"
 .include "../../textproc/icu/buildlink3.mk"
-BUILDLINK_API_DEPENDS.nss+=	nss>=3.38
+BUILDLINK_API_DEPENDS.nss+=	nss>=3.40.1
 .include "../../devel/nss/buildlink3.mk"
 .include "../../devel/zlib/buildlink3.mk"
 #.include "../../mk/jpeg.buildlink3.mk"

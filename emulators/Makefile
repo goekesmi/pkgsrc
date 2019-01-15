@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.288 2018/10/15 17:20:21 nia Exp $
+# $NetBSD: Makefile,v 1.291 2019/01/02 13:24:28 nia Exp $
 #
 
 COMMENT=	Emulators for other operating systems
@@ -51,6 +51,7 @@ SUBDIR+=	darcnes
 SUBDIR+=	darwin_lib
 SUBDIR+=	dega
 SUBDIR+=	dgen
+SUBDIR+=	dolphin-emu
 SUBDIR+=	dosbox
 SUBDIR+=	dynagen
 SUBDIR+=	dynamips
@@ -91,6 +92,7 @@ SUBDIR+=	libdsk
 SUBDIR+=	libretro-beetle-ngp
 SUBDIR+=	libretro-beetle-pce-fast
 SUBDIR+=	libretro-beetle-psx
+SUBDIR+=	libretro-beetle-psx-hw
 SUBDIR+=	libretro-beetle-saturn
 SUBDIR+=	libretro-beetle-sgx
 SUBDIR+=	libretro-beetle-vb
@@ -111,6 +113,7 @@ SUBDIR+=	libretro-fuse
 SUBDIR+=	libretro-gambatte
 SUBDIR+=	libretro-genesis-plus-gx
 SUBDIR+=	libretro-glsl-shaders
+SUBDIR+=	libretro-mame2010
 SUBDIR+=	libretro-mgba
 SUBDIR+=	libretro-mupen64plus
 SUBDIR+=	libretro-nestopia

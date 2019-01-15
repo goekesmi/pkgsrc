@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.501 2018/09/23 05:58:48 taca Exp $
+# $NetBSD: Makefile,v 1.503 2018/12/31 17:42:30 leot Exp $
 #
 
 COMMENT=	Miscellaneous utilities
@@ -238,6 +238,7 @@ SUBDIR+=	pty-redir
 SUBDIR+=	py-anita
 SUBDIR+=	py-anki2
 SUBDIR+=	py-ansi
+SUBDIR+=	py-asciinema
 SUBDIR+=	py-carddav
 SUBDIR+=	py-stdnum
 SUBDIR+=	py-tqdm
@@ -303,6 +304,7 @@ SUBDIR+=	ruby-hashie
 SUBDIR+=	ruby-launchy
 SUBDIR+=	ruby-memoizable
 SUBDIR+=	ruby-method_source
+SUBDIR+=	ruby-mimemagic
 SUBDIR+=	ruby-mini_portile2
 SUBDIR+=	ruby-naught
 SUBDIR+=	ruby-ohai

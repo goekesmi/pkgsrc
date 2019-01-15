@@ -1,6 +1,6 @@
-# $NetBSD: Makefile,v 1.7 2018/11/18 08:58:22 ryoon Exp $
+# $NetBSD: Makefile,v 1.10 2019/01/02 19:59:32 jmmv Exp $
 
-DISTNAME=	hugo-0.51
+DISTNAME=	hugo-0.53
 PKGNAME=	go-${DISTNAME}
 MASTER_SITES=	${MASTER_SITE_GITHUB:=gohugoio/}
 CATEGORIES=	www
@@ -21,7 +21,6 @@ REPLACE_SH+=	pull-docs.sh
 REPLACE_SH+=	docs/pull-theme.sh
 
 .include "../../devel/go-locker/buildlink3.mk"
-.include "../../www/go-toml-burntsushi/buildlink3.mk"
 .include "../../www/go-urlesc/buildlink3.mk"
 .include "../../devel/go-purell/buildlink3.mk"
 .include "../../textproc/go-chroma/buildlink3.mk"

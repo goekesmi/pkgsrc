@@ -1,7 +1,7 @@
-# $NetBSD: Makefile,v 1.25 2018/08/22 09:43:06 wiz Exp $
+# $NetBSD: Makefile,v 1.28 2019/01/06 02:42:49 tnn Exp $
 
 DISTNAME=	libfreehand-0.1.1
-PKGREVISION=	18
+PKGREVISION=	20
 CATEGORIES=	converters
 MASTER_SITES=	http://dev-www.libreoffice.org/src/
 EXTRACT_SUFX=	.tar.bz2
@@ -19,6 +19,10 @@ USE_TOOLS+=	perl:build pkg-config
 USE_LANGUAGES=	c c++
 
 CONFIGURE_ARGS+=	--without-docs
+.include "../../mk/compiler.mk"
+.if !empty(PKGSRC_COMPILER:Mclang)
+CXXFLAGS+=	-Wno-error=deprecated-register
+.endif
 
 PKGCONFIG_OVERRIDE+=	libfreehand.pc.in
 

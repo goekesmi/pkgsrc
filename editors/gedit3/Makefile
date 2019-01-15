@@ -1,7 +1,7 @@
-# $NetBSD: Makefile,v 1.44 2018/11/14 22:21:23 kleink Exp $
+# $NetBSD: Makefile,v 1.46 2018/12/14 12:40:28 adam Exp $
 
 DISTNAME=	gedit-3.22.1
-PKGREVISION=	6
+PKGREVISION=	7
 CATEGORIES=	editors gnome
 MASTER_SITES=	${MASTER_SITE_GNOME:=sources/gedit/${PKGVERSION_NOREV:R}/}
 EXTRACT_SUFX=	.tar.xz
@@ -18,7 +18,6 @@ GNU_CONFIGURE=		yes
 
 PKGCONFIG_OVERRIDE+=	data/gedit.pc.in
 PY_PATCHPLIST=		yes
-#PY_PEP3147=		no
 PYTHON_VERSIONS_INCOMPATIBLE=	27
 REPLACE_PYTHON+=	plugins/externaltools/data/send-to-fpaste.tool.in
 

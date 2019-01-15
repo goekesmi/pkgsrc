@@ -1,7 +1,7 @@
-# $NetBSD: Makefile,v 1.127 2018/07/20 03:33:55 ryoon Exp $
+# $NetBSD: Makefile,v 1.130 2019/01/06 12:53:56 bsiegert Exp $
 
 DISTNAME=	heimdal-1.5.3
-PKGREVISION=	18
+PKGREVISION=	19
 CATEGORIES=	security
 MASTER_SITES=	http://www.h5l.org/dist/src/
 
@@ -73,15 +73,21 @@ PLIST.vis=	yes
 PLIST.glob=	yes
 .endif
 
+PLIST_VARS+=		hcrypto
 # Linux does not have include/vis.h and expected include/glob.h.
 .if ${OPSYS} == "Linux"
 PLIST.vis=	yes
 PLIST.glob=	yes
 # Without this I get undefined references to pthread_getspecific
 PTHREAD_AUTO_VARS=	yes
+.if ${OS_VARIANT} == "Microsoft"
+# On Ubuntu hosted via WSL this is needed to avoid a DESTDIR/PLIST
+# conflict error.
+PLIST.hcrypto=	yes
+.endif
 .endif
 
-PLIST_VARS+=		afskauth hcrypto
+PLIST_VARS+=		afskauth
 .if ${OPSYS} == "IRIX"
 PLIST.afskauth=		yes
 .endif
@@ -120,6 +126,11 @@ PLIST.hcrypto=		yes
 PLIST.hcrypto=		yes
 .endif
 PLIST.vis=		yes
+# all of the tools need to link against pthread, force it.
+PTHREAD_AUTO_VARS=	yes
+.endif
+
+.if ${OPSYS} == "Minix"
 # all of the tools need to link against pthread, force it.
 PTHREAD_AUTO_VARS=	yes
 .endif

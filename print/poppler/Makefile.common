@@ -1,4 +1,4 @@
-# $NetBSD: Makefile.common,v 1.101 2018/09/02 21:23:21 wiz Exp $
+# $NetBSD: Makefile.common,v 1.105 2018/12/14 14:34:05 gson Exp $
 #
 # used by print/poppler/Makefile
 # used by print/poppler-cpp/Makefile
@@ -7,7 +7,7 @@
 # used by print/poppler-qt5/Makefile
 # used by print/poppler-utils/Makefile
 
-POPPLER_VERS=		0.68.0
+POPPLER_VERS=		0.72.0
 DISTNAME=		poppler-${POPPLER_VERS}
 CATEGORIES=		print
 MASTER_SITES=		https://poppler.freedesktop.org/
@@ -21,7 +21,8 @@ PATCHDIR=		${.CURDIR}/../../print/poppler/patches
 
 USE_TOOLS+=		pkg-config
 USE_LIBTOOL=		yes
-USE_LANGUAGES=		c c++
+USE_LANGUAGES=		c c++14
+GCC_REQD+=		4.9
 
 USE_CMAKE=		yes
 

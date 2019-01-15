@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.553 2018/09/21 13:25:08 maya Exp $
+# $NetBSD: Makefile,v 1.556 2018/12/14 09:09:44 wiz Exp $
 #
 
 COMMENT=	Audio tools
@@ -76,6 +76,7 @@ SUBDIR+=	daapd
 SUBDIR+=	dap
 SUBDIR+=	darkice
 SUBDIR+=	deforaos-mixer
+SUBDIR+=	din
 SUBDIR+=	disc-cover
 SUBDIR+=	distmp3
 SUBDIR+=	easyh10
@@ -89,6 +90,7 @@ SUBDIR+=	eyeD3
 SUBDIR+=	ezstream
 SUBDIR+=	faac
 SUBDIR+=	faad2
+SUBDIR+=	fasttracker2
 SUBDIR+=	fdk-aac
 SUBDIR+=	festival
 SUBDIR+=	festival-doc
@@ -130,6 +132,7 @@ SUBDIR+=	freeswitch-sounds-en
 SUBDIR+=	freeswitch-sounds-fr
 SUBDIR+=	freeswitch-sounds-ru
 SUBDIR+=	freezetag
+SUBDIR+=	game-music-emu
 SUBDIR+=	gbemol
 SUBDIR+=	gimmix
 SUBDIR+=	gkrellm-volume

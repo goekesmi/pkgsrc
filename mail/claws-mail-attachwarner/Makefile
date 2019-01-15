@@ -1,8 +1,8 @@
-# $NetBSD: Makefile,v 1.61 2018/11/14 22:21:56 kleink Exp $
+# $NetBSD: Makefile,v 1.63 2018/12/13 19:52:06 adam Exp $
 #
 
 PLUGIN_NAME=    attachwarner
-PKGREVISION= 2
+PKGREVISION= 4
 .include "../../mail/claws-mail/plugins.mk"
 
 MAINTAINER=	pkgsrc-users@NetBSD.org

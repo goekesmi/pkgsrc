@@ -1,8 +1,4 @@
-package main
-
-import (
-	"fmt"
-)
+package pkglint
 
 //go:generate goyacc -o shellyacc.go -v shellyacc.log -p shyy shell.y
 
@@ -11,7 +7,8 @@ type ShAtomType uint8
 const (
 	shtSpace    ShAtomType = iota
 	shtVaruse              // ${PREFIX}
-	shtWord                // while, cat, ENV=value
+	shtShVarUse            // $${var:-pol}
+	shtText                // while, cat, ENV=value
 	shtOperator            // (, ;, |
 	shtComment             // # ...
 	shtSubshell            // $$(
@@ -21,16 +18,20 @@ func (t ShAtomType) String() string {
 	return [...]string{
 		"space",
 		"varuse",
-		"word",
+		"shvaruse",
+		"text",
 		"operator",
 		"comment",
 		"subshell",
 	}[t]
 }
 
+// IsWord checks whether the atom counts as text.
+// Makefile variables, shell variables and other text counts,
+// but keywords, operators and separators don't.
 func (t ShAtomType) IsWord() bool {
 	switch t {
-	case shtVaruse, shtWord:
+	case shtVaruse, shtShVarUse, shtText:
 		return true
 	}
 	return false
@@ -44,14 +45,14 @@ type ShAtom struct {
 }
 
 func (atom *ShAtom) String() string {
-	if atom.Type == shtWord && atom.Quoting == shqPlain && atom.data == nil {
-		return fmt.Sprintf("%q", atom.MkText)
+	if atom.Type == shtText && atom.Quoting == shqPlain && atom.data == nil {
+		return sprintf("%q", atom.MkText)
 	}
 	if atom.Type == shtVaruse {
 		varuse := atom.VarUse()
-		return fmt.Sprintf("varuse(%q)", varuse.varname+varuse.Mod())
+		return sprintf("varuse(%q)", varuse.varname+varuse.Mod())
 	}
-	return fmt.Sprintf("ShAtom(%v, %q, %s)", atom.Type, atom.MkText, atom.Quoting)
+	return sprintf("ShAtom(%v, %q, %s)", atom.Type, atom.MkText, atom.Quoting)
 }
 
 // VarUse returns a read access to a Makefile variable, or nil for plain shell tokens.
@@ -60,6 +61,12 @@ func (atom *ShAtom) VarUse() *MkVarUse {
 		return atom.data.(*MkVarUse)
 	}
 	return nil
+}
+
+// ShVarname applies to shell variable atoms like $$varname or $${varname:-modifier}
+// and returns the name of the shell variable.
+func (atom *ShAtom) ShVarname() string {
+	return atom.data.(string)
 }
 
 // ShQuoting describes the context in which a string appears
@@ -81,6 +88,9 @@ const (
 	shqDquotBacktSquot                  // e.g. "`'word'`"
 )
 
+// String returns a very short identifier for the quoting state.
+// In this, d means double quotes, s means single quotes,
+// b means backticks and S means subshell.
 func (q ShQuoting) String() string {
 	return [...]string{
 		"plain",
@@ -122,5 +132,5 @@ func NewShToken(mkText string, atoms ...*ShAtom) *ShToken {
 }
 
 func (token *ShToken) String() string {
-	return fmt.Sprintf("ShToken(%v)", token.Atoms)
+	return sprintf("ShToken(%v)", token.Atoms)
 }

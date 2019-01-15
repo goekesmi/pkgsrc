@@ -1,7 +1,6 @@
-# $NetBSD: Makefile,v 1.177 2018/11/14 22:21:42 kleink Exp $
+# $NetBSD: Makefile,v 1.181 2019/01/06 08:41:01 markd Exp $
 
-DISTNAME=	inkscape-0.92.2
-PKGREVISION=	19
+DISTNAME=	inkscape-0.92.3
 CATEGORIES=	graphics
 MASTER_SITES=	https://media.inkscape.org/dl/resources/file/
 EXTRACT_SUFX=	.tar.bz2
@@ -52,6 +51,11 @@ SUBST_FILES.pycmd+=	share/patterns/CMakeLists.txt
 SUBST_FILES.pycmd+=	share/symbols/CMakeLists.txt
 SUBST_FILES.pycmd+=	share/templates/CMakeLists.txt
 SUBST_SED.pycmd=	-e "s,COMMAND python,COMMAND ${PYTHONBIN},g"
+
+SUBST_CLASSES+=		bool
+SUBST_STAGE.bool=	pre-configure
+SUBST_FILES.bool+=	src/extension/internal/pdfinput/pdf-parser.*
+SUBST_SED.bool=		-e 's|gTrue|true|g' -e 's|gFalse|false|g' -e 's|GBool|bool|g'
 
 REPLACE_PYTHON+=	cxxtest/cxxtestgen.py
 REPLACE_PYTHON+=	share/extensions/*.py

@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.5 2018/11/08 20:54:53 schmonz Exp $
+# $NetBSD: Makefile,v 1.10 2018/12/29 12:21:57 schmonz Exp $
 
 DISTNAME=		netqmail-1.06
 PKGNAME=		qmail-acceptutils-${ACPATCHVERSION}
@@ -10,7 +10,7 @@ HOMEPAGE=		https://schmonz.com/qmail/acceptutils/
 COMMENT=		Offer TLS and SMTP AUTH with new features and no patch conflicts
 LICENSE=		public-domain
 
-ACPATCHVERSION=		20181108
+ACPATCHVERSION=		20181228
 ACPATCH=		${DISTNAME}-acceptutils-${ACPATCHVERSION}.patch
 PATCHFILES+=		${ACPATCH}
 SITES.${ACPATCH}=	${HOMEPAGE}
@@ -23,7 +23,10 @@ CONFLICTS+=		qmail<=1.03nb32
 DJB_RESTRICTED=		no
 BUILD_TARGET=		acceptutils
 
-ACCEPTUTILS=		authup checknotroot fixsmtpio reup
+USE_LANGUAGES=		c c99
+
+ACCEPTUTILS=		authup checknotroot fixsmtpio reup \
+			qmail-qfilter-addtlsheader
 
 INSTALLATION_DIRS=	bin ${PKGMANDIR}/man8
 
