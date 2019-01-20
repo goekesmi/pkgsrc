@@ -1,7 +1,6 @@
-# $NetBSD: Makefile,v 1.9 2019/01/11 11:30:11 tnn Exp $
+# $NetBSD: Makefile,v 1.15 2019/01/19 23:21:43 tnn Exp $
 
-DISTNAME=	mesa-18.3.1
-PKGREVISION=	1
+DISTNAME=	mesa-18.3.2
 PKGNAME=	${DISTNAME:S/mesa/MesaLib/}
 CATEGORIES=	graphics x11
 MASTER_SITES=	ftp://ftp.freedesktop.org/pub/mesa/
@@ -71,9 +70,10 @@ CONFIGURE_ARGS+=	--enable-glx-read-only-text
 .endif
 
 PYTHON_FOR_BUILD_ONLY=	yes
-PYTHON_VERSIONS_INCOMPATIBLE=	34 35 36 37 # as of 11.2.2
 BUILD_DEPENDS+=		${PYPKGPREFIX}-mako-[0-9]*:../../devel/py-mako
-CONFIGURE_ENV+=		ac_cv_prog_PYTHON2=${PYTHONBIN}
+# needed to build vulkan support
+BUILD_DEPENDS+=		${PYPKGPREFIX}-cElementTree-[0-9]*:../../textproc/py-cElementTree
+CONFIGURE_ENV+=		PYTHON=${PYTHONBIN}
 .include "../../lang/python/tool.mk"
 
 # Handle platforms without exp2
@@ -87,23 +87,15 @@ CFLAGS.NetBSD+=		-Dalloca=__builtin_alloca
 CXXFLAGS.NetBSD+=	-Dalloca=__builtin_alloca
 
 pre-configure:
+	touch ${WRKSRC}/src/glx/apple_dummy.cpp
 	cd ${WRKSRC} && autoreconf -vif
-# Manual patch for FDO bug 90311. Don't apply if not on Darwin as there could
-# be side effects.
-.if ${OPSYS} == "Darwin"
-pre-configure: ${WRKDIR}/.manual_patch_done
-${WRKDIR}/.manual_patch_done:
-	cd ${WRKSRC} && ${TOOLS_PATCH} -z .manual -p0 < ${FILESDIR}/patch-manual_fdo90311
-	touch ${WRKSRC}/src/glx/dummy.cpp
-	touch ${.TARGET}
-.endif
 
 DRIRC_DIR=		${PKG_SYSCONFDIR}/drirc.d
 EGDIR=			${PREFIX}/share/examples/mesa
 OWN_DIRS+=		${DRIRC_DIR}
 INSTALLATION_DIRS+=	${EGDIR}
 CONF_FILES+=		${EGDIR}/00-mesa-defaults.conf	\
-	${DRIRC_DIR}/00-mesa-defaults.conf
+			  ${DRIRC_DIR}/00-mesa-defaults.conf
 
 post-install:
 	${INSTALL_DATA} ${WRKSRC}/src/util/00-mesa-defaults.conf ${DESTDIR}${EGDIR}
