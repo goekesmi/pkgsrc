@@ -1,6 +1,6 @@
-# $NetBSD: Makefile,v 1.2 2019/01/08 09:39:24 adam Exp $
+# $NetBSD: Makefile,v 1.4 2019/01/24 14:06:49 adam Exp $
 
-DISTNAME=	soupsieve-1.6.2
+DISTNAME=	soupsieve-1.7.3
 PKGNAME=	${PYPKGPREFIX}-${DISTNAME}
 CATEGORIES=	www python
 MASTER_SITES=	${MASTER_SITE_PYPI:=s/soupsieve/}

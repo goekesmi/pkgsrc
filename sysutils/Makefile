@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.795 2019/01/17 05:15:57 gutteridge Exp $
+# $NetBSD: Makefile,v 1.797 2019/01/24 13:58:17 adam Exp $
 #
 
 COMMENT=	System utilities
@@ -485,6 +485,7 @@ SUBDIR+=	py-pefile
 SUBDIR+=	py-psutil
 SUBDIR+=	py-ptyprocess
 SUBDIR+=	py-pyinotify
+SUBDIR+=	py-salt-pepper
 SUBDIR+=	py-setconf
 SUBDIR+=	py-setproctitle
 SUBDIR+=	py-structlog
@@ -635,6 +636,7 @@ SUBDIR+=	u-boot-nanopi-m1
 SUBDIR+=	u-boot-nanopi-neo
 SUBDIR+=	u-boot-nanopi-neo-plus2
 SUBDIR+=	u-boot-nanopi-neo2
+SUBDIR+=	u-boot-odroid-c2
 SUBDIR+=	u-boot-odroid-xu3
 SUBDIR+=	u-boot-orangepi-2
 SUBDIR+=	u-boot-orangepi-one
