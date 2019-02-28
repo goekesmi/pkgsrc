@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.507 2019/01/26 20:22:56 tnn Exp $
+# $NetBSD: Makefile,v 1.509 2019/02/17 12:34:21 maya Exp $
 #
 
 COMMENT=	Programming languages
@@ -244,6 +244,8 @@ SUBDIR+=	ruby24
 SUBDIR+=	ruby24-base
 SUBDIR+=	ruby25
 SUBDIR+=	ruby25-base
+SUBDIR+=	ruby26
+SUBDIR+=	ruby26-base
 SUBDIR+=	runawk
 SUBDIR+=	rust
 SUBDIR+=	sablevm
@@ -294,5 +296,6 @@ SUBDIR+=	wsbasic
 SUBDIR+=	yabasic
 SUBDIR+=	yap
 SUBDIR+=	zenlisp
+SUBDIR+=	zig
 
 .include "../mk/misc/category.mk"
