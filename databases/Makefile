@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.569 2018/12/09 12:16:41 taca Exp $
+# $NetBSD: Makefile,v 1.575 2019/03/05 15:55:13 taca Exp $
 
 COMMENT=	Databases
 
@@ -401,18 +401,15 @@ SUBDIR+=	repmgr
 SUBDIR+=	rrdtool
 SUBDIR+=	rrdtool12
 SUBDIR+=	ruby-activeldap
-SUBDIR+=	ruby-activerecord-cassandra
 SUBDIR+=	ruby-activerecord-odbc
-SUBDIR+=	ruby-activerecord32
 SUBDIR+=	ruby-activerecord42
 SUBDIR+=	ruby-activerecord51
+SUBDIR+=	ruby-activerecord52
 SUBDIR+=	ruby-arel
 SUBDIR+=	ruby-arel-helpers
-SUBDIR+=	ruby-arel30
 SUBDIR+=	ruby-arel60
 SUBDIR+=	ruby-arel80
 SUBDIR+=	ruby-awesome_nested_set
-SUBDIR+=	ruby-cassandra
 SUBDIR+=	ruby-data_objects
 SUBDIR+=	ruby-datamapper
 SUBDIR+=	ruby-dbd-mysql
@@ -421,7 +418,6 @@ SUBDIR+=	ruby-dbd-pg
 SUBDIR+=	ruby-dbd-sqlite
 SUBDIR+=	ruby-dbd-sqlite3
 SUBDIR+=	ruby-dbi
-SUBDIR+=	ruby-dm-active_model
 SUBDIR+=	ruby-dm-adjust
 SUBDIR+=	ruby-dm-aggregates
 SUBDIR+=	ruby-dm-ar-finders
@@ -441,7 +437,6 @@ SUBDIR+=	ruby-dm-migrations
 SUBDIR+=	ruby-dm-mysql-adapter
 SUBDIR+=	ruby-dm-observer
 SUBDIR+=	ruby-dm-postgres-adapter
-SUBDIR+=	ruby-dm-rails
 SUBDIR+=	ruby-dm-rest-adapter
 SUBDIR+=	ruby-dm-serializer
 SUBDIR+=	ruby-dm-sqlite-adapter
