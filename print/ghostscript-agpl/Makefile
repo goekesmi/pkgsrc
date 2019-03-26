@@ -1,8 +1,8 @@
-# $NetBSD: Makefile,v 1.38 2019/03/17 18:27:01 gdt Exp $
+# $NetBSD: Makefile,v 1.40 2019/03/24 00:36:27 gdt Exp $
 
 DISTNAME=	ghostscript-${GS_VERSION}
 PKGNAME=	${DISTNAME:S/ghostscript/ghostscript-agpl/}
-PKGREVISION=	2
+PKGREVISION=	3
 CATEGORIES=	print
 MASTER_SITES=	${MASTER_SITE_GITHUB:=ArtifexSoftware/}
 GITHUB_PROJECT=	ghostpdl-downloads
@@ -13,6 +13,8 @@ MAINTAINER=	pkgsrc-users@NetBSD.org
 HOMEPAGE=	https://ghostscript.com/
 COMMENT=	Postscript interpreter
 
+# Upstream calls this "GPL Ghostscript", which is confusing;
+# see https://bugs.ghostscript.com/show_bug.cgi?id=700877
 # Plus adobe verbatim for Resources/CMap.
 LICENSE=	gnu-agpl-v3
 

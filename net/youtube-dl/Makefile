@@ -1,15 +1,15 @@
-# $NetBSD: Makefile,v 1.164 2019/03/08 20:28:07 leot Exp $
+# $NetBSD: Makefile,v 1.166 2019/03/25 23:13:07 leot Exp $
 
 # XXX: VERSION_DATE can contains also an optional part that indicates
 # XXX: possible same day revisions. PKGNAME preserves that dotted part as is.
-VERSION_DATE=	2019.03.09
+VERSION_DATE=	2019.03.18
 DISTNAME=	youtube-dl-${VERSION_DATE}
 PKGNAME=	${DISTNAME:S/.//:S/.//}
 CATEGORIES=	net
-MASTER_SITES=	http://youtube-dl.org/downloads/${VERSION_DATE}/
+MASTER_SITES=	https://youtube-dl.org/downloads/${VERSION_DATE}/
 
 MAINTAINER=	leot@NetBSD.org
-HOMEPAGE=	http://rg3.github.io/youtube-dl/
+HOMEPAGE=	https://ytdl-org.github.io/youtube-dl/
 COMMENT=	Download videos from youtube.com
 LICENSE=	public-domain
 
