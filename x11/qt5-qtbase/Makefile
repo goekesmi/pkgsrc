@@ -1,7 +1,8 @@
-# $NetBSD: Makefile,v 1.71 2019/03/27 10:16:34 markd Exp $
+# $NetBSD: Makefile,v 1.74 2019/04/01 19:58:51 markd Exp $
 
 DISTNAME=	qtbase-everywhere-src-${QTVERSION}
 PKGNAME=	qt5-qtbase-${QTVERSION}
+PKGREVISION=	1
 COMMENT=	C++ X GUI toolkit
 
 .include "../../x11/qt5-qtbase/Makefile.common"
@@ -159,9 +160,15 @@ QMAKE_EXTRA=		QMAKE_PLATFORM += linux
 QMAKE_EXTRA=
 .endif
 
+COMPILER=	gcc
+.if !empty(PKGSRC_COMPILER:Mclang)
+COMPILER+=	clang llvm
+.endif
+
 pre-configure:
 	${SED}  -e 's:@LOCALBASE@:${LOCALBASE}:g' \
 		-e 's:@X11BASE@:${X11BASE}:g' \
+		-e 's:@COMPILER@:${COMPILER:Q}:g' \
 		-e 's:@CC@:${CC:Q}:g' \
 		-e 's:@CXX@:${CXX:Q}:g' \
 		-e 's:@LDFLAGS@:${LDFLAGS:Q}:g' \
