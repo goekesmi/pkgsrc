@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.18923 2019/04/02 08:58:56 wiz Exp $
+$NetBSD: TODO,v 1.18934 2019/04/09 13:11:27 ryoon Exp $
 
 Suggested new packages
 ======================
@@ -396,8 +396,8 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o ap22-authnz-external-3.3.2
 	o ap22-limitipconn-0.24
 	o ap22-vhost-ldap-2.4.0
-	o apache24-2.4.39
 	o apollo-1.7
+	o apr-1.7.0
 	o apr0-2.4.1
 	o ardour-5.11
 	o argtable-2.9
@@ -960,7 +960,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o mcollective-2.3.2
 	o mcsim-5.6.5
 	o mecab-ipadic-2.7.0.20070801
-	o meld-3.20.1
 	o memached-1.5.6
 	o mergeant-0.67
 	o merkaator-0.18.2
@@ -1138,11 +1137,11 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o py-pendrell-0.3.7
 	o py-ptt-1.10.2
 	o py-pycountry-1.20
+	o py-setuptools-41.0.0
 	o py-simpletal-5.1
 	o py-spf-2.0.12t
 	o py-sybase-0.37
 	o py-wxWidgets-4.0.0
-	o py-yaml-5.1
 	o py-yubiauth-0.3.10
 	o pythontidy-1.23
 	o qbzr-0.23.2
