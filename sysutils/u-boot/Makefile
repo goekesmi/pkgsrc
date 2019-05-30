@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.12 2019/05/18 18:01:34 thorpej Exp $
+# $NetBSD: Makefile,v 1.14 2019/05/29 03:24:02 thorpej Exp $
 #
 
 .include "../../sysutils/u-boot/u-boot-version.mk"
@@ -20,6 +20,7 @@ META_PACKAGE=	yes
 DEPENDS+=	u-boot-a10-olinuxino-lime-[0-9]*:../../sysutils/u-boot-a10-olinuxino-lime
 DEPENDS+=	u-boot-bananapi-m3-[0-9]*:../../sysutils/u-boot-bananapi-m3
 DEPENDS+=	u-boot-bananapi-[0-9]*:../../sysutils/u-boot-bananapi
+DEPENDS+=	u-boot-bananapro-[0-9]*:../../sysutils/u-boot-bananapro
 DEPENDS+=	u-boot-beagleboard-[0-9]*:../../sysutils/u-boot-beagleboard
 DEPENDS+=	u-boot-beagleboneblack-[0-9]*:../../sysutils/u-boot-beagleboneblack
 DEPENDS+=	u-boot-beaglebonewhite-[0-9]*:../../sysutils/u-boot-beaglebonewhite
@@ -34,6 +35,7 @@ DEPENDS+=	u-boot-hummingbird-a31-[0-9]*:../../sysutils/u-boot-hummingbird-a31
 DEPENDS+=	u-boot-jetson-tk1-[0-9]*:../../sysutils/u-boot-jetson-tk1
 DEPENDS+=	u-boot-jetson-tx1-[0-9]*:../../sysutils/u-boot-jetson-tx1
 DEPENDS+=	u-boot-jetson-tx2-[0-9]*:../../sysutils/u-boot-jetson-tx2
+DEPENDS+=	u-boot-lamobo-r1-[0-9]*:../../sysutils/u-boot-lamobo-r1
 .if !empty(PKG_OPTIONS:Mamlogic-meson)
 DEPENDS+=	u-boot-libretech-cc-[0-9]*:../../sysutils/u-boot-libretech-cc
 .endif

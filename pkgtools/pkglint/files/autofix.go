@@ -100,6 +100,15 @@ func (fix *Autofix) ReplaceAfter(prefix, from string, to string) {
 		if replaced != rawLine.textnl {
 			if G.Logger.IsAutofix() {
 				rawLine.textnl = replaced
+
+				// Fix the parsed text as well.
+				// This is only approximate and won't work in some edge cases
+				// that involve escaped comments or replacements across line breaks.
+				//
+				// TODO: Do this properly by parsing the whole line again,
+				//  and ideally everything that depends on the parsed line.
+				//  This probably requires a generic notification mechanism.
+				fix.line.Text = strings.Replace(fix.line.Text, prefix+from, prefix+to, 1)
 			}
 			fix.Describef(rawLine.Lineno, "Replacing %q with %q.", from, to)
 			return
@@ -141,6 +150,25 @@ func (fix *Autofix) ReplaceRegex(from regex.Pattern, toText string, howOften int
 			}
 		}
 	}
+
+	// Fix the parsed text as well.
+	// This is only approximate and won't work in some edge cases
+	// that involve escaped comments or replacements across line breaks.
+	//
+	// TODO: Do this properly by parsing the whole line again,
+	//  and ideally everything that depends on the parsed line.
+	//  This probably requires a generic notification mechanism.
+	done = 0
+	fix.line.Text = replaceAllFunc(
+		fix.line.Text,
+		from,
+		func(fromText string) string {
+			if howOften >= 0 && done >= howOften {
+				return fromText
+			}
+			done++
+			return toText
+		})
 }
 
 // Custom runs a custom fix action, unless the fix is skipped anyway
@@ -279,9 +307,9 @@ func (fix *Autofix) Apply() {
 	if logDiagnostic {
 		msg := sprintf(fix.diagFormat, fix.diagArgs...)
 		if !logFix && G.Logger.FirstTime(line.Filename, line.Linenos(), msg) {
-			line.showSource(G.out)
+			line.showSource(G.Logger.out)
 		}
-		G.Logf(fix.level, line.Filename, line.Linenos(), fix.diagFormat, msg)
+		G.Logger.Logf(fix.level, line.Filename, line.Linenos(), fix.diagFormat, msg)
 	}
 
 	if logFix {
@@ -290,20 +318,20 @@ func (fix *Autofix) Apply() {
 			if action.lineno != 0 {
 				lineno = strconv.Itoa(action.lineno)
 			}
-			G.Logf(AutofixLogLevel, line.Filename, lineno, AutofixFormat, action.description)
+			G.Logger.Logf(AutofixLogLevel, line.Filename, lineno, AutofixFormat, action.description)
 		}
 	}
 
 	if logDiagnostic || logFix {
 		if logFix {
-			line.showSource(G.out)
+			line.showSource(G.Logger.out)
 		}
 		if logDiagnostic && len(fix.explanation) > 0 {
 			line.Explain(fix.explanation...)
 		}
 		if G.Logger.Opts.ShowSource {
 			if !(G.Logger.Opts.Explain && logDiagnostic && len(fix.explanation) > 0) {
-				G.out.Separate()
+				G.Logger.out.Separate()
 			}
 		}
 	}
@@ -394,7 +422,7 @@ func (fix *Autofix) skip() bool {
 		fix.diagFormat != "",
 		"Autofix: The diagnostic must be given before the action.")
 	// This check is necessary for the --only command line option.
-	return !G.shallBeLogged(fix.diagFormat)
+	return !G.Logger.shallBeLogged(fix.diagFormat)
 }
 
 func (fix *Autofix) assertRealLine() {
@@ -414,7 +442,7 @@ func SaveAutofixChanges(lines Lines) (autofixed bool) {
 	if !G.Logger.Opts.Autofix {
 		for _, line := range lines.Lines {
 			if line.autofix != nil && line.autofix.modified {
-				G.autofixAvailable = true
+				G.Logger.autofixAvailable = true
 				if G.Logger.Opts.ShowAutofix {
 					// Only in this case can the loaded lines be modified.
 					G.fileCache.Evict(line.Filename)

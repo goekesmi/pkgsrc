@@ -1,8 +1,8 @@
-# $NetBSD: Makefile,v 1.74 2019/04/03 00:33:05 ryoon Exp $
+# $NetBSD: Makefile,v 1.76 2019/05/30 20:04:59 he Exp $
 #
 
 DISTNAME=	opendnssec-1.4.13
-PKGREVISION=	8
+PKGREVISION=	9
 CATEGORIES=	security net
 MASTER_SITES=	https://www.opendnssec.org/files/source/
 
@@ -11,8 +11,8 @@ HOMEPAGE=	https://www.opendnssec.org/
 COMMENT=	OSS for a fast and easy DNSSEC deployment
 LICENSE=	2-clause-bsd
 
-DEPENDS+=	ldns>=1.6.17:../../net/ldns
 BUILD_DEPENDS+=	CUnit-[0-9]*:../../devel/cunit
+DEPENDS+=	ldns>=1.6.17:../../net/ldns
 
 BUILD_DEFS+=	VARBASE
 
@@ -51,7 +51,7 @@ PKG_SYSCONFSUBDIR=	opendnssec
 SUBST_CLASSES+=		paths
 SUBST_FILES.paths=	${WRKSRC}/conf/Makefile.in
 SUBST_STAGE.paths=	pre-configure
-SUBST_SED.paths=	-e 's,@EGDIR@,${EGDIR},'
+SUBST_VARS.paths=	EGDIR
 
 CXXFLAGS.NetBSD+=	-D_NETBSD_SOURCE
 

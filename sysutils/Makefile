@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.810 2019/05/18 17:39:48 thorpej Exp $
+# $NetBSD: Makefile,v 1.814 2019/05/29 03:24:02 thorpej Exp $
 #
 
 COMMENT=	System utilities
@@ -54,6 +54,7 @@ SUBDIR+=	boxbackup-client
 SUBDIR+=	boxbackup-server
 SUBDIR+=	brasero
 SUBDIR+=	brasero-nautilus
+SUBDIR+=	bsdec2-image-upload
 SUBDIR+=	bsdinstall
 SUBDIR+=	bsign
 SUBDIR+=	btpin-qt
@@ -396,6 +397,7 @@ SUBDIR+=	netbsd-kmod-tools
 SUBDIR+=	netbt-hcidump
 SUBDIR+=	news
 SUBDIR+=	nnn
+SUBDIR+=	node_exporter
 SUBDIR+=	noice
 SUBDIR+=	notification-daemon
 SUBDIR+=	nrg2iso
@@ -620,6 +622,7 @@ SUBDIR+=	u-boot-a10-olinuxino-lime
 SUBDIR+=	u-boot-bananapi
 SUBDIR+=	u-boot-bananapi-m3
 SUBDIR+=	u-boot-bananapi-r2
+SUBDIR+=	u-boot-bananapro
 SUBDIR+=	u-boot-beagleboard
 SUBDIR+=	u-boot-beagleboneblack
 SUBDIR+=	u-boot-beaglebonewhite
@@ -634,6 +637,7 @@ SUBDIR+=	u-boot-hummingbird-a31
 SUBDIR+=	u-boot-jetson-tk1
 SUBDIR+=	u-boot-jetson-tx1
 SUBDIR+=	u-boot-jetson-tx2
+SUBDIR+=	u-boot-lamobo-r1
 SUBDIR+=	u-boot-libretech-cc
 SUBDIR+=	u-boot-nanopi-m1
 SUBDIR+=	u-boot-nanopi-neo

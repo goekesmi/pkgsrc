@@ -224,8 +224,8 @@ func (ck MkLineChecker) checkDirectiveFor(forVars map[string]bool, indentation *
 		// The guessed flag could also be determined more correctly. As of November 2018,
 		// running pkglint over the whole pkgsrc tree did not produce any different result
 		// whether guessed was true or false.
-		forLoopType := Vartype{btForLoop, List, []ACLEntry{{"*", aclpAllRead}}}
-		forLoopContext := VarUseContext{&forLoopType, vucTimeParse, VucQuotPlain, false}
+		forLoopType := NewVartype(btForLoop, List, NewACLEntry("*", aclpAllRead))
+		forLoopContext := VarUseContext{forLoopType, vucTimeParse, VucQuotPlain, false}
 		mkline.ForEachUsed(func(varUse *MkVarUse, time vucTime) {
 			ck.CheckVaruse(varUse, &forLoopContext)
 		})
@@ -609,8 +609,9 @@ func (ck MkLineChecker) checkVaruseModifiersRange(varuse *MkVarUse) {
 	}
 }
 
-// checkVarusePermissions checks the permissions for the right-hand side
-// of a variable assignment line.
+// checkVarusePermissions checks the permissions when a variable is used,
+// be it in a variable assignment, in a shell command, a conditional, or
+// somewhere else.
 //
 // See checkVarassignLeftPermissions.
 func (ck MkLineChecker) checkVarusePermissions(varname string, vartype *Vartype, vuc *VarUseContext) {
@@ -712,6 +713,11 @@ func (ck MkLineChecker) checkVarusePermissions(varname string, vartype *Vartype,
 	// Anyway, there must be a warning now since the requested use is not
 	// allowed. The only remaining question is about how detailed the
 	// warning will be.
+	ck.warnVarusePermissions(varname, vartype, directly, indirectly)
+}
+
+func (ck MkLineChecker) warnVarusePermissions(varname string, vartype *Vartype, directly, indirectly bool) {
+	mkline := ck.MkLine
 
 	anyPerms := vartype.Union()
 	if !anyPerms.Contains(aclpUse) && !anyPerms.Contains(aclpUseLoadtime) {
@@ -996,7 +1002,7 @@ func (ck MkLineChecker) checkVarassignLeft() {
 
 	ck.checkTextVarUse(
 		ck.MkLine.Varname(),
-		&Vartype{BtVariableName, NoVartypeOptions, []ACLEntry{{"*", aclpAll}}},
+		NewVartype(BtVariableName, NoVartypeOptions, NewACLEntry("*", aclpAll)),
 		vucTimeParse)
 }
 

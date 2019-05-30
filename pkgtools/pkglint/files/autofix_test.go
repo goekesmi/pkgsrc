@@ -360,7 +360,7 @@ func (s *Suite) Test_Autofix_Explain__without_explain_option(c *check.C) {
 
 	t.CheckOutputLines(
 		"WARN: Makefile:74: Please write row instead of line.")
-	c.Check(G.explanationsAvailable, equals, true)
+	c.Check(G.Logger.explanationsAvailable, equals, true)
 }
 
 func (s *Suite) Test_Autofix_Explain__default(c *check.C) {
@@ -380,7 +380,7 @@ func (s *Suite) Test_Autofix_Explain__default(c *check.C) {
 		"",
 		"\tExplanation",
 		"")
-	c.Check(G.explanationsAvailable, equals, true)
+	c.Check(G.Logger.explanationsAvailable, equals, true)
 }
 
 func (s *Suite) Test_Autofix_Explain__show_autofix(c *check.C) {
@@ -401,7 +401,7 @@ func (s *Suite) Test_Autofix_Explain__show_autofix(c *check.C) {
 		"",
 		"\tExplanation",
 		"")
-	c.Check(G.explanationsAvailable, equals, true)
+	c.Check(G.Logger.explanationsAvailable, equals, true)
 }
 
 func (s *Suite) Test_Autofix_Explain__autofix(c *check.C) {
@@ -418,7 +418,7 @@ func (s *Suite) Test_Autofix_Explain__autofix(c *check.C) {
 
 	t.CheckOutputLines(
 		"AUTOFIX: Makefile:74: Replacing \"line\" with \"row\".")
-	c.Check(G.explanationsAvailable, equals, false) // Not necessary.
+	c.Check(G.Logger.explanationsAvailable, equals, false) // Not necessary.
 }
 
 func (s *Suite) Test_Autofix_Explain__SilentAutofixFormat(c *check.C) {
@@ -963,6 +963,54 @@ func (s *Suite) Test_Autofix_Apply__source_without_explain(c *check.C) {
 		"AUTOFIX: filename:5: Replacing \"replacement\" with \"text again\".",
 		"-\ttext",
 		"+\ttext again")
+}
+
+// After fixing part of a line, the whole line needs to be parsed again.
+//
+// As of May 2019, this is not done yet.
+func (s *Suite) Test_Autofix_Apply__text_after_replacing_string(c *check.C) {
+	t := s.Init(c)
+
+	t.SetUpCommandLine("-Wall", "--autofix")
+	mkline := t.NewMkLine("filename.mk", 123, "VAR=\tvalue")
+
+	fix := mkline.Autofix()
+	fix.Notef("Just a demo.")
+	fix.Replace("value", "new value")
+	fix.Apply()
+
+	t.CheckOutputLines(
+		"AUTOFIX: filename.mk:123: Replacing \"value\" with \"new value\".")
+
+	t.Check(mkline.raw[0].textnl, equals, "VAR=\tnew value\n")
+	t.Check(mkline.raw[0].orignl, equals, "VAR=\tvalue\n")
+	t.Check(mkline.Text, equals, "VAR=\tnew value")
+	// FIXME: should be updated as well.
+	t.Check(mkline.Value(), equals, "value")
+}
+
+// After fixing part of a line, the whole line needs to be parsed again.
+//
+// As of May 2019, this is not done yet.
+func (s *Suite) Test_Autofix_Apply__text_after_replacing_regex(c *check.C) {
+	t := s.Init(c)
+
+	t.SetUpCommandLine("-Wall", "--autofix")
+	mkline := t.NewMkLine("filename.mk", 123, "VAR=\tvalue")
+
+	fix := mkline.Autofix()
+	fix.Notef("Just a demo.")
+	fix.ReplaceRegex(`va...`, "new value", -1)
+	fix.Apply()
+
+	t.CheckOutputLines(
+		"AUTOFIX: filename.mk:123: Replacing \"value\" with \"new value\".")
+
+	t.Check(mkline.raw[0].textnl, equals, "VAR=\tnew value\n")
+	t.Check(mkline.raw[0].orignl, equals, "VAR=\tvalue\n")
+	t.Check(mkline.Text, equals, "VAR=\tnew value")
+	// FIXME: should be updated as well.
+	t.Check(mkline.Value(), equals, "value")
 }
 
 func (s *Suite) Test_Autofix_Realign__wrong_line_type(c *check.C) {
