@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.814 2019/05/29 03:24:02 thorpej Exp $
+# $NetBSD: Makefile,v 1.817 2019/06/06 08:38:26 tpaul Exp $
 #
 
 COMMENT=	System utilities
@@ -69,6 +69,7 @@ SUBDIR+=	capistrano
 SUBDIR+=	ccd2iso
 SUBDIR+=	ccze
 SUBDIR+=	cdbkup
+SUBDIR+=	cdirip
 SUBDIR+=	cdrdao
 SUBDIR+=	cdrkit
 SUBDIR+=	cdrtools
@@ -194,7 +195,6 @@ SUBDIR+=	gdmap
 SUBDIR+=	genpasswd
 SUBDIR+=	gentoo
 SUBDIR+=	gfm
-SUBDIR+=	gio-fam
 SUBDIR+=	gkrellm
 SUBDIR+=	gkrellm-est
 SUBDIR+=	gkrellm-server
@@ -620,7 +620,9 @@ SUBDIR+=	tsm8
 #SUBDIR+=	u-boot			# only contains Makefile fragments
 SUBDIR+=	u-boot-a10-olinuxino-lime
 SUBDIR+=	u-boot-bananapi
+SUBDIR+=	u-boot-bananapi-m2-zero
 SUBDIR+=	u-boot-bananapi-m3
+SUBDIR+=	u-boot-bananapi-p2-zero
 SUBDIR+=	u-boot-bananapi-r2
 SUBDIR+=	u-boot-bananapro
 SUBDIR+=	u-boot-beagleboard

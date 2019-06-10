@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1250 2019/05/29 20:13:09 adam Exp $
+# $NetBSD: Makefile,v 1.1252 2019/06/05 14:31:57 hauke Exp $
 #
 
 COMMENT=	Networking tools
@@ -408,7 +408,6 @@ SUBDIR+=	net-snmp
 SUBDIR+=	net6
 SUBDIR+=	netatalk22
 SUBDIR+=	netatalk3
-SUBDIR+=	netatalk30
 SUBDIR+=	netbsd-iscsi-initiator
 SUBDIR+=	netbsd-iscsi-target
 SUBDIR+=	netcat
@@ -756,6 +755,7 @@ SUBDIR+=	rootprobe
 SUBDIR+=	rp-l2tp
 SUBDIR+=	rp-pppoe
 SUBDIR+=	rsync
+SUBDIR+=	rt4-cli
 SUBDIR+=	rtmpdump
 SUBDIR+=	rtorrent
 SUBDIR+=	ruby-addressable

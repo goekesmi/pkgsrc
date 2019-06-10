@@ -1,4 +1,4 @@
-# $NetBSD: buildlink3.mk,v 1.47 2019/05/29 12:38:23 wiz Exp $
+# $NetBSD: buildlink3.mk,v 1.49 2019/06/08 19:51:38 leot Exp $
 
 BUILDLINK_TREE+=	librsvg
 
@@ -10,28 +10,16 @@ BUILDLINK_ABI_DEPENDS.librsvg+=		librsvg>=2.40.20nb4
 
 .include "../../mk/bsd.fast.prefs.mk"
 
-# platforms where pkgsrc supports lang/rust
-.if (${MACHINE_ARCH} == "aarch64" \
-  || ${MACHINE_ARCH} == "armv7" \
-  || ${MACHINE_ARCH} == "i386" \
-  || ${MACHINE_ARCH} == "powerpc" \
-  || ${MACHINE_ARCH} == "sparc64" \
-  || ${MACHINE_ARCH} == "x86_64") \
-  && \
- (${OPSYS} == "Darwin" \
- || ${OPSYS} == "FreeBSD" \
- || ${OPSYS} == "Linux" \
- || ${OPSYS} == "NetBSD" \
- || ${OPSYS} == "SunOS")
-LIBRSVG_USE_RUST?=	yes
-.endif
+.include "../../graphics/librsvg/available.mk"
 
-.if ${LIBRSVG_USE_RUST} == "yes"
+.if ${LIBRSVG_TYPE} == "rust"
 BUILDLINK_PKGSRCDIR.librsvg?=		../../graphics/librsvg
 BUILDLINK_API_DEPENDS.librsvg+=		librsvg>=2.41
-.else
+.elif ${LIBRSVG_TYPE} == "c"
 BUILDLINK_PKGSRCDIR.librsvg?=		../../graphics/librsvg-c
 BUILDLINK_API_DEPENDS.librsvg+=		librsvg<2.41
+.else
+PKG_FAIL_REASON+=       "[graphics/librsvg/buildlink3.mk] Invalid value ${LIBRSVG_TYPE} for LIBRSVG_TYPE."
 .endif
 
 .include "../../devel/pango/buildlink3.mk"

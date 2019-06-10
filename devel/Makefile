@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2854 2019/05/29 19:51:10 adam Exp $
+# $NetBSD: Makefile,v 1.2857 2019/06/09 09:43:19 wen Exp $
 #
 
 COMMENT=	Development utilities
@@ -24,6 +24,7 @@ SUBDIR+=	R-blob
 SUBDIR+=	R-cli
 SUBDIR+=	R-crayon
 SUBDIR+=	R-evaluate
+SUBDIR+=	R-fansi
 SUBDIR+=	R-glue
 SUBDIR+=	R-inline
 SUBDIR+=	R-iterators
@@ -209,6 +210,7 @@ SUBDIR+=	darts
 SUBDIR+=	dconf
 SUBDIR+=	dconf-editor
 SUBDIR+=	ddd
+SUBDIR+=	debugcon_printf
 SUBDIR+=	deforaos-asm
 SUBDIR+=	deforaos-coder
 SUBDIR+=	deforaos-configure
@@ -1283,6 +1285,7 @@ SUBDIR+=	p5-Git-Repository-Plugin-AUTOLOAD
 SUBDIR+=	p5-Git-Version-Compare
 SUBDIR+=	p5-Git-Wrapper
 SUBDIR+=	p5-GitLab-API-v3
+SUBDIR+=	p5-GitLab-API-v4
 SUBDIR+=	p5-Glib-Object-Introspection
 SUBDIR+=	p5-Gnome2
 SUBDIR+=	p5-Gnome2-GConf
