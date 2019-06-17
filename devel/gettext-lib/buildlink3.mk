@@ -23,7 +23,7 @@ BUILDLINK_LDADD.gettext+=	${BUILDLINK_LDADD.iconv}
 # due to stricter linker requirements for implicit libraries.
 #
 BROKEN_GETTEXT_DETECTION?=	no
-.if !empty(BROKEN_GETTEXT_DETECTION:M[yY][eE][sS]) || ${OPSYS} == "SunOS"
+.if !empty(BROKEN_GETTEXT_DETECTION:M[yY][eE][sS]) || ${OPSYS} == "notSunOS"
 BUILDLINK_LDFLAGS.gettext+=	${BUILDLINK_LDADD.gettext}
 CONFIGURE_ENV+=			INTLLIBS="${BUILDLINK_LDADD.gettext}"
 .endif
