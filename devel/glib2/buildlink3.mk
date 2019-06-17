@@ -16,6 +16,9 @@ TOOL_DEPENDS+=	glib2-tools-[0-9]*:../../devel/glib2-tools
 
 .include "../../converters/libiconv/buildlink3.mk"
 .include "../../devel/gettext-lib/buildlink3.mk"
+
+LDFLAGS+=	${BUILDLINK_LDADD.gettext}
+
 .include "../../devel/pcre/buildlink3.mk"
 .include "../../devel/zlib/buildlink3.mk"
 .include "../../devel/libffi/buildlink3.mk"
