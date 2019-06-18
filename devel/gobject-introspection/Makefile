@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.61 2019/06/05 09:12:32 prlw1 Exp $
+# $NetBSD: Makefile,v 1.63 2019/06/13 09:43:19 wiz Exp $
 
 DISTNAME=	gobject-introspection-1.60.1
 PKGREVISION=	1

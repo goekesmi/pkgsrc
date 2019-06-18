@@ -1,7 +1,8 @@
-# $NetBSD: Makefile,v 1.250 2019/06/06 11:05:12 adam Exp $
+# $NetBSD: Makefile,v 1.253 2019/06/16 15:28:11 leot Exp $
 
 .include "Makefile.common"
 
+PKGREVISION=	1
 CATEGORIES=	devel gnome
 COMMENT=	Some useful routines for C programming (glib2)
 
@@ -26,6 +27,8 @@ FILES_SUBST+=		GIO_QUERYMODULES=${PREFIX}/bin/gio-querymodules
 FILES_SUBST+=		GLIB_COMPILE_SCHEMAS=${PREFIX}/bin/glib-compile-schemas
 FILES_SUBST+=		GLIB_SCHEMAS_DIR=${PREFIX}/share/glib-2.0/schemas
 
+OWN_DIRS=		${GIO_MODULES_DIR}
+
 BUILD_DEFS+=		VARBASE
 SUBST_CLASSES+=		dbusdb
 SUBST_MESSAGE.dbusdb=	Adjust dbus machine uuid path to dbus package
@@ -42,6 +45,17 @@ SUBST_FILES.xdg=	glib/gcharset.c glib/gutils.c gio/xdgmime/xdgmime.c
 SUBST_SED.xdg=		-e 's,/usr/local/share/:/usr/share/,${PREFIX}/share,'
 SUBST_SED.xdg+=		-e 's,/etc/xdg,${PKG_SYSCONFDIR}/xdg,'
 SUBST_SED.xdg+=		-e 's,/usr/share/locale,${PREFIX}/${PKGLOCALEDIR}/locale,'
+
+PKGCONFIG_OVERRIDE+=	output/meson-private/gio-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/gio-unix-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/glib-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/gmodule-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/gmodule-export-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/gmodule-no-export-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/gobject-2.0.pc
+PKGCONFIG_OVERRIDE+=	output/meson-private/gthread-2.0.pc
+
+PKGCONFIG_OVERRIDE_STAGE=	post-configure
 
 # to run gdbus-codegen to generate gdbus-daemon-generated.{h,c}
 TOOL_DEPENDS+=		${PYPKGPREFIX}-expat-[0-9]*:../../textproc/py-expat

@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1252 2019/06/05 14:31:57 hauke Exp $
+# $NetBSD: Makefile,v 1.1254 2019/06/18 15:20:08 ryoon Exp $
 #
 
 COMMENT=	Networking tools
@@ -420,7 +420,6 @@ SUBDIR+=	netpipes
 SUBDIR+=	nfdump
 SUBDIR+=	ngrep
 SUBDIR+=	nicotine
-SUBDIR+=	nicovideo-dl
 SUBDIR+=	nidentd
 SUBDIR+=	nipper
 SUBDIR+=	nload
@@ -533,6 +532,7 @@ SUBDIR+=	p5-Net-Packet
 SUBDIR+=	p5-Net-Patricia
 SUBDIR+=	p5-Net-Pcap
 SUBDIR+=	p5-Net-RawIP
+SUBDIR+=	p5-Net-SFTP-Foreign
 SUBDIR+=	p5-Net-SMTP-TLS
 SUBDIR+=	p5-Net-SNMP
 SUBDIR+=	p5-Net-SNMP-Mixin

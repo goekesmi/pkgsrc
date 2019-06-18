@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2857 2019/06/09 09:43:19 wen Exp $
+# $NetBSD: Makefile,v 1.2861 2019/06/17 16:40:40 adam Exp $
 #
 
 COMMENT=	Development utilities
@@ -2107,6 +2107,7 @@ SUBDIR+=	py-functools32
 SUBDIR+=	py-future
 SUBDIR+=	py-futures
 SUBDIR+=	py-game
+SUBDIR+=	py-gcovr
 SUBDIR+=	py-generate
 SUBDIR+=	py-gflags
 SUBDIR+=	py-gitinspector
@@ -2315,6 +2316,7 @@ SUBDIR+=	py-pyparsing
 SUBDIR+=	py-pyrsistent
 SUBDIR+=	py-pysha3
 SUBDIR+=	py-pysvn
+SUBDIR+=	py-pyte
 SUBDIR+=	py-pytemplate
 SUBDIR+=	py-python-dotenv
 SUBDIR+=	py-python-slugify
@@ -2363,7 +2365,6 @@ SUBDIR+=	py-subversion
 SUBDIR+=	py-subvertpy
 SUBDIR+=	py-sure
 SUBDIR+=	py-sysctl
-SUBDIR+=	py-tabular
 SUBDIR+=	py-termcolor
 SUBDIR+=	py-test
 SUBDIR+=	py-test-assume
@@ -2806,7 +2807,6 @@ SUBDIR+=	xmake
 SUBDIR+=	xorg-util-macros
 SUBDIR+=	xsd
 SUBDIR+=	xulrunner192
-SUBDIR+=	xulrunner45
 SUBDIR+=	xxgdb
 SUBDIR+=	xxhash
 SUBDIR+=	yajl
