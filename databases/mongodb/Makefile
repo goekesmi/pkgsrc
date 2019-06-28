@@ -1,15 +1,15 @@
-# $NetBSD: Makefile,v 1.35 2019/04/25 07:32:41 maya Exp $
+# $NetBSD: Makefile,v 1.43 2019/06/28 16:21:11 gdt Exp $
 
 DISTNAME=	mongodb-src-r4.0.6
 PKGNAME=	${DISTNAME:S/src-r//}
-PKGREVISION=	2
+PKGREVISION=	5
 CATEGORIES=	databases
 MASTER_SITES=	http://fastdl.mongodb.org/src/
 
-MAINTAINER=	bartosz.kuzma@gmail.com
+MAINTAINER=	pkgsrc-users@netbsd.org
 HOMEPAGE=	https://www.mongodb.com/
 COMMENT=	NoSQL distributed document-oriented database
-LICENSE=	gnu-agpl-v3 # Client and tools licensed under apache-2.0
+LICENSE=	server-side-public-license # Client and tools licensed under apache-2.0
 
 # MongoDB 3.4 onwards explicitly does not support 32-bit x86 platforms
 NOT_FOR_PLATFORM+=	*-*-i386
@@ -22,7 +22,12 @@ BUILD_DEPENDS+=	${PYPKGPREFIX}-regex-[0-9]*:../../textproc/py-regex
 BUILD_DEPENDS+=	${PYPKGPREFIX}-yaml-[0-9]*:../../textproc/py-yaml
 
 NO_CONFIGURE=	yes
-USE_LANGUAGES=	c c++
+# https://github.com/mongodb/mongo/blob/master/docs/building.md
+USE_LANGUAGES=	c99 c++17
+# Note that USE_LANGUAGES should contain c11, per SConstruct, but
+# pkgsrc does not yet support that.
+GCC_REQD+=	8
+
 USE_TOOLS+=	pkg-config
 
 SCONS_ARGS=	${_MAKE_JOBS}
@@ -31,7 +36,7 @@ SCONS_ARGS+=	--release
 SCONS_ARGS+=	--runtime-hardening=off # does not produce executables
 #SCONS_ARGS+=	--use-system-asio
 SCONS_ARGS+=	--use-system-boost
-#SCONS_ARGS+=	--use-system-icu # fails with >57.1
+SCONS_ARGS+=	--use-system-icu
 SCONS_ARGS+=	--use-system-mongo-c
 SCONS_ARGS+=	--use-system-pcre
 SCONS_ARGS+=	--use-system-snappy
@@ -170,7 +175,7 @@ post-install:
 .include "../../devel/zlib/buildlink3.mk"
 .include "../../lang/python/pyversion.mk"
 .include "../../net/libpcap/buildlink3.mk"
-#.include "../../textproc/icu/buildlink3.mk"
+.include "../../textproc/icu/buildlink3.mk"
 .include "../../textproc/yaml-cpp/buildlink3.mk"
 .include "../../www/curl/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"
