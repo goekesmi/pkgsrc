@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.2714 2019/07/01 07:15:17 adam Exp $
+$NetBSD: CHANGES-2019,v 1.2733 2019/07/01 18:26:43 adam Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -4484,3 +4484,24 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated multimedia/mkvtoolnix to 35.0.0 [adam 2019-07-01]
 	Updated devel/py-ipython to 7.6.0 [adam 2019-07-01]
 	Updated devel/py-isort to 4.3.21 [adam 2019-07-01]
+	Updated audio/pulseaudio to 12.2nb5 [triaxx 2019-07-01]
+	Updated devel/libuv to 1.30.0 [adam 2019-07-01]
+	Updated lang/npm to 6.9.2 [adam 2019-07-01]
+	Updated games/supertuxkart to 1.0 [nia 2019-07-01]
+	Updated devel/py-xopen to 0.7.3 [adam 2019-07-01]
+	Updated www/py-test-django to 3.5.1 [adam 2019-07-01]
+	Removed audio/openal successor audio/openal-soft [nia 2019-07-01]
+	Updated devel/ocaml-checkseum to 0.1.0 [jaapb 2019-07-01]
+	Updated devel/ocaml-core to 0.12.3 [jaapb 2019-07-01]
+	Updated devel/ocaml-digestif to 0.7.2 [jaapb 2019-07-01]
+	Updated games/flare-engine to 1.10 [nia 2019-07-01]
+	Updated games/flare-game to 1.10 [nia 2019-07-01]
+	Updated devel/bam to 0.5.1 [nia 2019-07-01]
+	Updated games/teeworlds to 0.7.3.1 [nia 2019-07-01]
+	Updated games/supertux to 0.6.0 [nia 2019-07-01]
+	Added www/ocaml-cohttp version 2.1.2 [jaapb 2019-07-01]
+	Added misc/ocaml-magic-mime version 1.1.1 [jaapb 2019-07-01]
+	Added net/ocaml-conduit version 1.4.0 [jaapb 2019-07-01]
+	Added time/ocaml-mtime version 1.1.0 [jaapb 2019-07-01]
+	Updated www/py-django to 1.11.22 [adam 2019-07-01]
+	Updated www/py-django2 to 2.2.3 [adam 2019-07-01]
