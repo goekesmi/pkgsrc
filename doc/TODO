@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19099 2019/07/01 16:19:45 nia Exp $
+$NetBSD: TODO,v 1.19104 2019/07/04 13:35:30 ryoon Exp $
 
 Suggested new packages
 ======================
@@ -454,7 +454,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o cardboard-schedule-1.14c [at http://www.bright-green.com/downloads/]
 	o catdoc-1.1
 	o catdoc-tk-1.1
-	o cbindgen-0.9.0
 	o cddbd-1.5.2
 	o cdrkit-1.1.10
 	o cfengine3-3.10.2
@@ -851,7 +850,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o kdevelop-5.1
 	o kdevelop4-4.7.2
 	o kdevplatform-1.7.1
-	o keepassxc-2.4.3
 	o keybinder-0.3.1
 	o khard-0.14.0
 	o kipi-plugins-4.14.0
@@ -904,8 +902,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o libmtag-0.3.6
 	o liboobs-2.32.0
 	o liboop-1.0.1
-	o libpaper-1.1.28
-	o libpcap-1.9.0
 	o libpgm-5.2.122
 	o libprelude-3.1.0
 	o libpreludedb-3.1.0
@@ -1337,7 +1333,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o virtinst-0.600.4
 	o virtuoso-7.2.0p1
 	o visual-regexp-3.1
-	o vlc-3.0.7
 	o vnc-4.0 [http://www.realvnc.com/download.html|pkgsrc-wip]
 	o vnstat-1.15
 	o vtk-5.10.1
