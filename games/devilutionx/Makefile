@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1 2019/07/03 10:58:12 nia Exp $
+# $NetBSD: Makefile,v 1.3 2019/07/06 14:44:47 nia Exp $
 
 DISTNAME=	devilutonx-0.4.0
 CATEGORIES=	games
@@ -13,7 +13,10 @@ LICENSE=	unlicense
 WRKSRC=		${WRKDIR}/${GITHUB_PROJECT}-${PKGVERSION_NOREV}
 
 USE_CMAKE=	yes
-USE_LANGUAGES=	c c++03
+USE_LANGUAGES=	c c++14
+
+# std::make_unique, etc
+GCC_REQD+=	5
 
 CMAKE_ARGS+=	-DCMAKE_BUILD_TYPE="Release"
 CMAKE_ARGS+=	-DASAN=OFF
