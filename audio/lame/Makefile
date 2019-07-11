@@ -11,7 +11,6 @@ COMMENT=	Fast, high quality MP3 encoder
 LICENSE=	gnu-lgpl-v2
 
 GNU_CONFIGURE=		yes
-USE_FEATURES+=		strnlen
 USE_TOOLS+=		gmake
 USE_LIBTOOL=		yes
 USE_LANGUAGES=		c c++

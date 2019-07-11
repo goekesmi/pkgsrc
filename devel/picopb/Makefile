@@ -11,7 +11,6 @@ COMMENT=	Small implementation of Google protocol buffers in C
 LICENSE=	2-clause-bsd
 
 GNU_CONFIGURE=	yes
-USE_FEATURES+=	strnlen
 USE_LIBTOOL=	yes
 USE_TOOLS+=	yacc
 
