@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3033 2019/07/24 19:07:22 rin Exp $
+$NetBSD: CHANGES-2019,v 1.3044 2019/07/26 23:30:16 rin Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -4968,3 +4968,14 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated x11/dunst to 1.4.1 [nia 2019-07-24]
 	Updated net/enet to 1.3.14 [nia 2019-07-24]
 	Updated textproc/aspell to 0.60.6.1nb9 [rin 2019-07-24]
+	Updated wm/ctwm to 4.0.3 [rhialto 2019-07-24]
+	Updated net/dhcpcd to 8.0.1 [roy 2019-07-25]
+	Updated lang/openjdk8 to 1.8.222 [tnn 2019-07-25]
+	Updated security/putty to 0.72 [ryoon 2019-07-25]
+	Added games/etlegacy-data version 2.60b [nia 2019-07-25]
+	Removed devel/intellij-idea-ce successor intellij-ce-bin [ryoon 2019-07-25]
+	Updated sysutils/xfce4-thunar to 1.8.8 [gutteridge 2019-07-25]
+	Updated audio/vamp-plugin-sdk to 2.8.0 [nia 2019-07-26]
+	Removed wm/py-tyle [wiz 2019-07-26]
+	Updated net/ldns to 1.7.1 [he 2019-07-26]
+	Updated x11/mlterm to 3.8.8nb4 [rin 2019-07-26]
