@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3044 2019/07/26 23:30:16 rin Exp $
+$NetBSD: CHANGES-2019,v 1.3052 2019/07/27 20:35:24 leot Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -4979,3 +4979,11 @@ Changes to the packages collection and infrastructure in 2019:
 	Removed wm/py-tyle [wiz 2019-07-26]
 	Updated net/ldns to 1.7.1 [he 2019-07-26]
 	Updated x11/mlterm to 3.8.8nb4 [rin 2019-07-26]
+	Updated devel/ccache to 3.7.2 [nia 2019-07-27]
+	Updated devel/cdk to 5.0.20190303 [nia 2019-07-27]
+	Updated net/mikutter to 3.9.2 [tsutsui 2019-07-27]
+	Updated fonts/koruri-ttf to 20180915 [nia 2019-07-27]
+	Updated audio/mpg123 to 1.25.11 [nia 2019-07-27]
+	Updated devel/SDL2 to 2.0.10 [nia 2019-07-27]
+	Updated net/youtube-dl to 20190727 [leot 2019-07-27]
+	Updated textproc/translate-shell to 0.9.6.11 [leot 2019-07-27]
