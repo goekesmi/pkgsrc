@@ -1,4 +1,4 @@
-$NetBSD: distinfo,v 1.30 2019/03/21 11:05:02 jaapb Exp $
+$NetBSD: distinfo,v 1.1 2019/07/29 18:07:10 wiz Exp $
 
 SHA1 (unison-2.48.15v4.tar.gz) = 249cc0068ab62478c813189b2ac1426a3ff5edae
 RMD160 (unison-2.48.15v4.tar.gz) = 6480dfb05d6cefe20ebffa64eb6bd50c3aa7aa97

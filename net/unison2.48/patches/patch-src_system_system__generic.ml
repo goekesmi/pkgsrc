@@ -1,4 +1,4 @@
-$NetBSD: patch-src_system_system__generic.ml,v 1.1 2019/03/21 11:05:02 jaapb Exp $
+$NetBSD: patch-src_system_system__generic.ml,v 1.1 2019/07/29 18:07:10 wiz Exp $
 
 Needed for compatibility with OCaml 4.08
 --- src/system/system_generic.ml.orig	2017-12-18 12:23:54.000000000 +0000

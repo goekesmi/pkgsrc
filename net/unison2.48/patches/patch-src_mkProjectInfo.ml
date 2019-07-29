@@ -1,4 +1,4 @@
-$NetBSD: patch-src_mkProjectInfo.ml,v 1.1 2017/11/14 13:03:35 jaapb Exp $
+$NetBSD: patch-src_mkProjectInfo.ml,v 1.1 2019/07/29 18:07:10 wiz Exp $
 
 Add revision string for correct version detection
 --- src/mkProjectInfo.ml.orig	2015-10-05 18:14:23.000000000 +0000

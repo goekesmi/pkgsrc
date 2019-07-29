@@ -1,4 +1,4 @@
-$NetBSD: patch-src_files.ml,v 1.1 2019/03/21 11:05:02 jaapb Exp $
+$NetBSD: patch-src_files.ml,v 1.1 2019/07/29 18:07:10 wiz Exp $
 
 Replace deprecated sort function
 --- src/files.ml.orig	2018-01-27 21:12:13.000000000 +0000

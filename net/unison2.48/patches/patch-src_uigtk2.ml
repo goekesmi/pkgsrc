@@ -1,4 +1,4 @@
-$NetBSD: patch-src_uigtk2.ml,v 1.1 2017/11/14 13:03:35 jaapb Exp $
+$NetBSD: patch-src_uigtk2.ml,v 1.1 2019/07/29 18:07:10 wiz Exp $
 
 Lablgtk now has safe_string
 --- src/uigtk2.ml.orig	2015-10-05 18:14:23.000000000 +0000
