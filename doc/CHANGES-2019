@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3072 2019/07/30 10:30:32 roy Exp $
+$NetBSD: CHANGES-2019,v 1.3088 2019/07/31 01:38:22 fox Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -5028,3 +5028,20 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated net/libtorrent to 0.13.8 [nia 2019-07-30]
 	Updated net/rtorrent to 0.9.8 [nia 2019-07-30]
 	Updated net/dhcpcd to 8.0.2 [roy 2019-07-30]
+	Updated devel/nss to 3.45 [ryoon 2019-07-30]
+	Updated graphics/geeqie to 1.5 [ryoon 2019-07-30]
+	Updated audio/libebur128 to 1.2.4 [nia 2019-07-30]
+	Updated misc/goffice0.10 to 0.10.45 [nia 2019-07-30]
+	Updated math/gnumeric112 to 1.12.45 [nia 2019-07-30]
+	Removed graphics/opencv2 successor graphics/opencv [nia 2019-07-30]
+	Updated pkgtools/pkglint to 5.7.17 [rillig 2019-07-30]
+	Added archivers/R-zip version 2.0.3 [brook 2019-07-30]
+	Added devel/R-checkmate version 1.9.4 [brook 2019-07-30]
+	Added devel/R-checkmate version 1.9.4 [brook 2019-07-30]
+	Added devel/R-clipr version 0.7.0 [brook 2019-07-30]
+	Added devel/R-rematch version 1.0.1 [brook 2019-07-31]
+	Added devel/R-rio version 0.5.16 [brook 2019-07-31]
+	Added devel/R-tcltk2 version 1.2.11 [brook 2019-07-31]
+	Added devel/R-withr version 2.1.2 [brook 2019-07-31]
+	Added devel/R-xfun version 0.8 [brook 2019-07-31]
+	Updated www/cliqz to 1.28.0 [fox 2019-07-31]
