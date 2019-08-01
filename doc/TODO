@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19156 2019/07/30 13:37:13 nia Exp $
+$NetBSD: TODO,v 1.19161 2019/08/01 13:43:15 nia Exp $
 
 Suggested new packages
 ======================
@@ -407,12 +407,8 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o PACK-0.0.4
 	o PAM-0.99.7.1
 	o Pantomime-1.2.2
-	o R-RandomFields-3.1.8
 	o R-akima-11
-	o R-gdata-2.17.0
-	o R-httpRequest-0.0.10
 	o R-mapproj-3
-	o R-maps-3.1.0
 	o R-ncdf-1.6.8
 	o SOGo-4.0.7
 	o SOPE-4.0.7
@@ -469,7 +465,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o asn1c-0.9.27
 	o aspell-nb-2.0.10
 	o asterisk13-13.21.1
-	o aubio-0.4.2
 	o autoconvert-0.3.16
 	o avant-window-navigator-0.4.2
 	o avidemux-2.6.16
