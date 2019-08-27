@@ -1,6 +1,6 @@
-$NetBSD: distinfo,v 1.9 2019/06/16 14:08:03 adam Exp $
+$NetBSD: distinfo,v 1.11 2019/08/26 10:38:11 adam Exp $
 
-SHA1 (arrow-0.14.2.tar.gz) = 5461d044f8f94769333e2a3d7ebb63a7aa5fea97
-RMD160 (arrow-0.14.2.tar.gz) = c8d64cf3ea2a072ed382c8badefb974dbc9edc98
-SHA512 (arrow-0.14.2.tar.gz) = 68c28e363de180f606e874076a9107b5214d8973e4bb9cdab639c5e30efe29e69cf97ca4aa1372f8da116dc3a518f2e4f8bc00807d64091ac922122288cfd31b
-Size (arrow-0.14.2.tar.gz) = 102667 bytes
+SHA1 (arrow-0.14.5.tar.gz) = 7bd044ac9ca1abf33b40d3877314e6a3713a3ffd
+RMD160 (arrow-0.14.5.tar.gz) = ca61d432a0e56c0430fc543a321f4249fc5dac51
+SHA512 (arrow-0.14.5.tar.gz) = 2b2fa23ad565b1c85728aadb997dba30726b61c666a852f84be547254e54a23aaf20c9eda73e78246dcbb68d46954e035c66b44d4fcd5e5404bab2ebd4e81dc8
+Size (arrow-0.14.5.tar.gz) = 590609 bytes
