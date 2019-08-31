@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.842 2019/08/21 17:40:41 nia Exp $
+# $NetBSD: Makefile,v 1.845 2019/08/30 19:06:34 nia Exp $
 #
 
 COMMENT=	Graphics tools and libraries
@@ -13,7 +13,6 @@ SUBDIR+=	GraphicsMagick
 SUBDIR+=	ImageMagick
 SUBDIR+=	ImageMagick6
 SUBDIR+=	ImageViewer
-SUBDIR+=	Mesa
 SUBDIR+=	MesaDemos
 SUBDIR+=	MesaLib
 SUBDIR+=	Ngraph
@@ -192,7 +191,6 @@ SUBDIR+=	gliv
 SUBDIR+=	glm
 SUBDIR+=	glpng
 SUBDIR+=	glu
-SUBDIR+=	glut
 SUBDIR+=	glw
 SUBDIR+=	glx-utils
 SUBDIR+=	gmic
@@ -311,6 +309,7 @@ SUBDIR+=	libggiwmh
 SUBDIR+=	libgii
 SUBDIR+=	libgiigic
 SUBDIR+=	libgltf
+SUBDIR+=	libglvnd
 SUBDIR+=	libgnomecanvas
 SUBDIR+=	libgnomecanvasmm
 SUBDIR+=	libimagequant
