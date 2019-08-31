@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2902 2019/08/25 15:08:42 tsutsui Exp $
+# $NetBSD: Makefile,v 1.2904 2019/08/29 13:45:24 he Exp $
 #
 
 COMMENT=	Development utilities
@@ -394,6 +394,7 @@ SUBDIR+=	go-goorgeous
 SUBDIR+=	go-gopkgs
 SUBDIR+=	go-goptlib
 SUBDIR+=	go-goreturns
+SUBDIR+=	go-gox
 SUBDIR+=	go-hashstructure
 SUBDIR+=	go-homedir
 SUBDIR+=	go-humanize
@@ -578,6 +579,7 @@ SUBDIR+=	kpty
 SUBDIR+=	krunner
 SUBDIR+=	kservice
 SUBDIR+=	ktexteditor
+SUBDIR+=	kwayland
 SUBDIR+=	kyua
 SUBDIR+=	lcc
 SUBDIR+=	lcdis
