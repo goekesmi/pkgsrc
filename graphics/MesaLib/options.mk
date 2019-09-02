@@ -1,4 +1,4 @@
-# $NetBSD: options.mk,v 1.71 2019/08/30 13:00:56 nia Exp $
+# $NetBSD: options.mk,v 1.73 2019/09/01 09:36:16 nia Exp $
 
 PKG_OPTIONS_VAR=		PKG_OPTIONS.MesaLib
 
@@ -15,8 +15,12 @@ PKG_SUGGESTED_OPTIONS+=		x11
 #
 # Enable it by default on platforms where such GPUs might be encountered or
 # LLVM-accelerated software rendering might be useful.
-.if (${MACHINE_ARCH} == "i386" || ${MACHINE_ARCH} == "x86_64" || \
-     ${MACHINE_ARCH} == "aarch64")
+.if ${OPSYS} != "SunOS" && \
+    ${OPSYS} != "Darwin" && \
+    ${OPSYS} != "Cygwin" && \
+      (${MACHINE_ARCH} == "i386" || \
+       ${MACHINE_ARCH} == "x86_64" || \
+       ${MACHINE_ARCH} == "aarch64")
 PKG_SUGGESTED_OPTIONS+=		llvm
 .endif
 
@@ -69,7 +73,7 @@ PLIST.glx=		yes
 .  if ${OPSYS} != "Darwin" && ${OPSYS} != "Cygwin"
 MESON_ARGS+=		-Dglx=dri
 .    include "../../multimedia/libvdpau/available.mk"
-.    if ${VDPAU_AVAILABLE} == "yes"
+.    if ${OPSYS} != "SunOS" && ${VDPAU_AVAILABLE} == "yes"
 MESON_ARGS+=		-Dgallium-vdpau=true
 PLIST.vdpau=		yes
 .      include "../../multimedia/libvdpau/buildlink3.mk"

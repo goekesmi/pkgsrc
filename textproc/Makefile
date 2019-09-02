@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1046 2019/08/26 18:32:43 ng0 Exp $
+# $NetBSD: Makefile,v 1.1048 2019/09/02 13:40:04 nia Exp $
 #
 
 COMMENT=	Text processing utilities (does not include desktop publishing)
@@ -391,6 +391,7 @@ SUBDIR+=	libodfgen
 SUBDIR+=	libpinyin
 SUBDIR+=	libplist
 SUBDIR+=	libunicode
+SUBDIR+=	libuninameslist
 SUBDIR+=	libunistring
 SUBDIR+=	libxls
 SUBDIR+=	libxlsxwriter
@@ -601,6 +602,7 @@ SUBDIR+=	p5-Text-Markdown
 SUBDIR+=	p5-Text-Markdown-Discount
 SUBDIR+=	p5-Text-MicroTemplate
 SUBDIR+=	p5-Text-Microformat
+SUBDIR+=	p5-Text-MultiMarkdown
 SUBDIR+=	p5-Text-Ngram
 SUBDIR+=	p5-Text-Nimble
 SUBDIR+=	p5-Text-PDF

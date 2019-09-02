@@ -1,8 +1,8 @@
-# $NetBSD: Makefile,v 1.158 2019/08/30 13:00:56 nia Exp $
+# $NetBSD: Makefile,v 1.162 2019/09/02 20:28:34 nia Exp $
 
 DISTNAME=	mesa-19.1.5
 PKGNAME=	${DISTNAME:S/mesa/MesaLib/}
-PKGREVISION=	1
+PKGREVISION=	2
 CATEGORIES=	graphics
 MASTER_SITES=	https://mesa.freedesktop.org/archive/
 EXTRACT_SUFX=	.tar.xz
@@ -12,7 +12,7 @@ HOMEPAGE=	https://www.mesa3d.org/
 COMMENT=	Open source OpenGL implementation
 LICENSE=	mit
 
-USE_TOOLS+=	bison flex pkg-config
+USE_TOOLS+=	bison flex pkg-config xgettext
 USE_LANGUAGES=	c99 c++
 USE_LIBTOOL=	yes
 
@@ -63,13 +63,13 @@ PLIST_VARS+=		egl gbm vaapi xatracker
 .include "../../x11/libdrm/buildlink3.mk"
 MESA_PLATFORMS+=	drm
 MESON_ARGS+=		-Ddri3=true
-MESON_ARGS+=		-Dgallium-xa=true
-PLIST.xatracker=	yes
 .  if ${OPSYS} != "SunOS"
 MESON_ARGS+=		-Degl=true
 MESON_ARGS+=		-Dgbm=true
+MESON_ARGS+=		-Dgallium-xa=true
 PLIST.egl=		yes
 PLIST.gbm=		yes
+PLIST.xatracker=	yes
 .  else
 MESON_ARGS+=		-Degl=false
 MESON_ARGS+=		-Dgbm=false
@@ -151,7 +151,8 @@ MESON_ARGS+=	-Dgallium-xvmc=false
 CPPFLAGS+=	-DHAVE_NOATEXIT
 CPPFLAGS+=	-DSYSCONFDIR=${PKG_SYSCONFDIR}
 
-BUILDLINK_TRANSFORM+=	rm:-Werror=return-type
+BUILDLINK_TRANSFORM+=		rm:-Werror=return-type
+BUILDLINK_TRANSFORM.SunOS+=	rm:-Wl,--build-id=sha1
 
 # Work around Xorg segfaulting in radeon driver due to wrong alloca being used
 CFLAGS.NetBSD+=		-Dalloca=__builtin_alloca

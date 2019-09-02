@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2904 2019/08/29 13:45:24 he Exp $
+# $NetBSD: Makefile,v 1.2906 2019/09/02 09:53:56 adam Exp $
 #
 
 COMMENT=	Development utilities
@@ -401,6 +401,7 @@ SUBDIR+=	go-humanize
 SUBDIR+=	go-i18n
 SUBDIR+=	go-immutable-radix
 SUBDIR+=	go-ini
+SUBDIR+=	go-iochan
 SUBDIR+=	go-isatty
 SUBDIR+=	go-jwalterweatherman
 SUBDIR+=	go-kingpin.v3-unstable
@@ -2411,6 +2412,7 @@ SUBDIR+=	py-test-mock
 SUBDIR+=	py-test-pythonpath
 SUBDIR+=	py-test-randomly
 SUBDIR+=	py-test-relaxed
+SUBDIR+=	py-test-rerunfailures
 SUBDIR+=	py-test-runner
 SUBDIR+=	py-test-shutil
 SUBDIR+=	py-test-sugar
