@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2 2019/08/29 12:19:44 nia Exp $
+# $NetBSD: Makefile,v 1.5 2019/09/02 16:41:01 nia Exp $
 
 DISTNAME=	mono-6.0.0.313
 CATEGORIES=	lang
@@ -15,8 +15,10 @@ WRKSRC=		${WRKDIR}/${DISTNAME}
 TOOL_DEPENDS+=	p5-XML-Parser-[0-9]*:../../textproc/p5-XML-Parser
 CONFLICTS=	pnet-[0-9]* mcsim-[0-9]* lc-[0-9]*
 ALL_ENV+=	MONO_SHARED_DIR=${WRKDIR} PLATFORM=
+ALL_ENV+=	PAXCTL=${PAXCTL}
 
-USE_TOOLS+=	bash:run bison gmake gtar msgfmt perl:run pkg-config autoconf automake
+USE_TOOLS+=	bash:run cmake gmake gtar msgfmt perl:run pkg-config
+USE_TOOLS+=	bison autoconf automake
 USE_LIBTOOL=	yes
 USE_LANGUAGES+=	c c99 c++
 EXTRACT_USING=	gtar
@@ -24,9 +26,8 @@ EXTRACT_USING=	gtar
 GNU_CONFIGURE=		yes
 PKG_SYSCONFSUBDIR=	mono
 CONFIGURE_ARGS+=	--sysconfdir=${PKG_SYSCONFDIR}
-
-# The boringtls provider seems Linux-only and requires CMake to build.
 CONFIGURE_ARGS+=	--disable-btls
+CONFIGURE_ARGS+=	--disable-btls-lib
 
 # Requires a cwrappers change: http://mail-index.netbsd.org/tech-pkg/2019/08/16/msg021791.html
 USE_CWRAPPERS=		no
@@ -111,13 +112,13 @@ MAKE_DIRS+=	${PKG_SYSCONFDIR}/mconfig
 TEST_TARGET=	check
 
 SUBST_CLASSES+=			fix-prefix
-SUBST_STAGE.fix-prefix=		post-patch
+SUBST_STAGE.fix-prefix=		pre-configure
 SUBST_MESSAGE.fix-prefix=	Fixing relative prefix
 SUBST_FILES.fix-prefix=		${PKGCONFIG_OVERRIDE}
 SUBST_SED.fix-prefix=		-e 's,$${pcfiledir}/../..,\@prefix\@,g'
 
 SUBST_CLASSES+=			fix-cfgdir
-SUBST_STAGE.fix-cfgdir=		post-patch
+SUBST_STAGE.fix-cfgdir=		pre-configure
 SUBST_MESSAGE.fix-cfgdir=	Fixing configuration files install dir
 SUBST_FILES.fix-cfgdir=		mcs/tools/mconfig/Makefile
 SUBST_SED.fix-cfgdir=		-e 's,$$(sysconfdir)/mono,${EGDIR},g'
@@ -166,6 +167,7 @@ GNU_ARCH.i386=		i586
 CFLAGS+=		-march=i586
 .endif
 
+# Unsafe JIT, possibly problematic boehm-gc
 NOT_PAX_MPROTECT_SAFE+=	bin/mono-sgen
 
 post-install:

@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19227 2019/08/30 14:00:23 nia Exp $
+$NetBSD: TODO,v 1.19237 2019/09/02 09:05:10 adam Exp $
 
 Suggested new packages
 ======================
@@ -387,7 +387,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o GMT-5.1.1
 	o GNUMail-1.2.2
 	o Gorm-1.2.22
-	o ImageMagick-7.0.8.62
+	o ImageMagick-7.0.8.63
 	o JBidwatcher-2.5.6 [wants launch4j]
 	o LPRng-core-3.8.35
 	o OdfConverter-4.0
@@ -399,7 +399,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o R-ncdf-1.6.8
 	o SOGo-4.0.7
 	o SOPE-4.0.7
-	o Sigil-0.9.16 [needs QtWebEngine]
+	o Sigil-0.9.17 [needs QtWebEngine]
 	o TiffIO-140a
 	o YoSucker-81
 	o abcmidi-20170416
@@ -472,6 +472,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o binkd-1.04
 	o binutils-2.31
 	o bird6-1.5.0
+	o blender-2.80
 	o bliz++-0.10
 	o blur6ex-0.3.462
 	o bmkdep-20140112
@@ -495,6 +496,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o cardboard-schedule-1.14c [at http://www.bright-green.com/downloads/]
 	o catdoc-1.1
 	o catdoc-tk-1.1
+	o cbindgen-0.9.1
 	o cddbd-1.5.2
 	o cdrkit-1.1.10
 	o cfengine3-3.10.2
@@ -506,7 +508,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o cheese-3.16.1
 	o cherokee-1.2.103 [pkg/48268]
 	o chimera-1.30a
-	o chromium-bsu-0.9.16.1
 	o cim-5.1
 	o cjk-lyx-1.4.4
 	o classpath-0.99
@@ -598,7 +599,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o esh-0.8.5
 	o ess-15.09
 	o etach-1.4.1
-	o eterm-0.9.6
 	o etm-3.0.43 [wip/py-etmtk]
 	o etm-891
 	o ettercap-0.7.6
@@ -773,7 +773,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o h323plus-1.24.0 [replaces openh323, from http://www.h323plus.org/]
 	o hamster-applet-2.32.1
 	o hanzim-3.5
-	o harfbuzz-2.6.1
 	o harminv-1.4
 	o haskell-mode-13.20
 	o hatari-2.2.0
@@ -836,6 +835,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o htmldoc-1.8.28
 	o http_load-20140814
 	o hugo-0.57.1 [needs gocloud.dev]
+	o i3-4.17.1
 	o icbirc-2.0
 	o icc11-13.0
 	o icdprog-0.5
@@ -913,6 +913,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o libICE-1.0.10
 	o libX11-1.6.8
 	o libXt-1.2.0 [https://lists.x.org/archives/xorg/2019-June/059825.html]
+	o libarchive-3.4.0
 	o libbpg-0.9.6
 	o libcaca-0.99.19
 	o libcarddav-14.0.4
@@ -1011,7 +1012,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o modular-xorg-xquartz-1.18.0
 	o molden-4.8 [after which PR 40252 can be closed]
 	o molden-5.5
-	o mono-5.2
 	o mono-nat-1.1.0
 	o mono-tools-4.2
 	o mono-xsp-4.2
@@ -1172,7 +1172,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o py-sybase-0.37
 	o py-wxWidgets-4.0.0
 	o py-yubiauth-0.3.10
-	o py-zipp-0.6.0
 	o pythontidy-1.23
 	o qbzr-0.23.2
 	o qdirstat-1.6
@@ -1391,6 +1390,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o xauth-1.1
 	o xbacklight-1.2.3
 	o xbiff-1.0.4
+	o xcb-util-0.4.1
 	o xclock-1.0.9
 	o xcoral-3.14
 	o xerces-j-2.4.0 [pkg/21725]
@@ -1405,7 +1405,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o xfs-1.1.1 [wip]
 	o xfsprogs-4.3.0
 	o xhippo-3.5
-	o xine-1.2.3
 	o xinput-1.6.3
 	o xjman-0.7
 	o xkeyboard-config-2.27
