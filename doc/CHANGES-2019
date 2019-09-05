@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3741 2019/09/02 14:45:49 nia Exp $
+$NetBSD: CHANGES-2019,v 1.3755 2019/09/05 06:45:12 adam Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -6181,3 +6181,19 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated net/libupnp to 1.8.4 [nia 2019-09-02]
 	Added textproc/libuninameslist version 20190701 [nia 2019-09-02]
 	Updated fonts/fontforge to 20190801 [nia 2019-09-02]
+	Updated fonts/spleen to 1.1.0 [fcambus 2019-09-03]
+	Updated lang/guile22 to 2.2.6nb1 [gutteridge 2019-09-03]
+	Updated textproc/bat to 0.12.1 [fox 2019-09-03]
+	Updated net/samba4 to 4.10.8 [adam 2019-09-03]
+	Updated devel/py-setuptools to 41.2.0 [adam 2019-09-04]
+	Updated devel/py-test-shutil to 1.7.0 [adam 2019-09-04]
+	Updated www/py-django to 1.11.24 [adam 2019-09-04]
+	Updated www/py-django2 to 2.2.5 [adam 2019-09-04]
+	Updated net/synergy to 1.10.3 [tnn 2019-09-04]
+	Updated net/dhcpcd to 8.0.4 [roy 2019-09-04]
+	Updated net/get_iplayer to 3.22 [nia 2019-09-04]
+	Updated sysutils/gentoo to 0.20.7 [nia 2019-09-04]
+	Updated games/lbreakout2 to 2.6.5 [nia 2019-09-04]
+	Updated www/seamonkey to 2.49.5 [nia 2019-09-04]
+	Removed chat/ircservice successor chat/anope [nia 2019-09-04]
+	Updated archivers/unrar to 5.8.1 [adam 2019-09-05]
