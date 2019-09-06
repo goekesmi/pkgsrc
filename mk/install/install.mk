@@ -1,4 +1,4 @@
-# $NetBSD: install.mk,v 1.77 2019/09/02 02:23:03 rillig Exp $
+# $NetBSD: install.mk,v 1.78 2019/09/06 09:00:35 jperkin Exp $
 #
 # This file provides the code for the "install" phase.
 #
@@ -350,15 +350,15 @@ install-ctf: plist
 	@${RM} -f ${WRKDIR}/.ctfdata ${WRKDIR}/.ctffail ${WRKDIR}/.ctfnox
 	${RUN}cd ${DESTDIR:Q}${PREFIX:Q};				\
 	${CAT} ${_PLIST_NOKEYWORDS} | while read f; do			\
+		case "$${f}" in						\
+		${CTF_FILES_SKIP:@p@${p}) continue ;;@}			\
+		*) ;;							\
+		esac;							\
 		[ ! -h "$${f}" ] || continue;				\
 		/bin/file -b "$${f}" | grep ^ELF >/dev/null || continue; \
 		if /bin/elfdump "$${f}" | grep SUNW_ctf >/dev/null; then \
 			continue;					\
 		fi;							\
-		case "$${f}" in						\
-		${CTF_FILES_SKIP:@p@${p}) continue ;;@}			\
-		*) ;;							\
-		esac;							\
 		tmp_f="$${f}.XXX";					\
 		if err=`${CTFCONVERT} -o "$${tmp_f}" "$${f}" 2>&1`; then \
 			if [ -f "$${tmp_f}" -a -f "$${f}" ]; then	\

@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3755 2019/09/05 06:45:12 adam Exp $
+$NetBSD: CHANGES-2019,v 1.3770 2019/09/06 09:58:36 jperkin Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -6197,3 +6197,22 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated www/seamonkey to 2.49.5 [nia 2019-09-04]
 	Removed chat/ircservice successor chat/anope [nia 2019-09-04]
 	Updated archivers/unrar to 5.8.1 [adam 2019-09-05]
+	Updated editors/texmaker to 5.0.3 [nros 2019-09-05]
+	Updated devel/cmake to 3.15.3 [adam 2019-09-05]
+	Updated devel/talloc to 2.3.0 [adam 2019-09-05]
+	Updated devel/tevent to 0.10.1 [adam 2019-09-05]
+	Updated devel/memcached to 1.5.17 [adam 2019-09-05]
+	Updated math/py-ephem to 3.7.7.0 [adam 2019-09-05]
+	Updated textproc/py-precis-i18n to 1.0.1 [adam 2019-09-05]
+	Updated audio/fasttracker2 to 2.168 [fox 2019-09-05]
+	Updated www/gitea to 1.9.2 [nia 2019-09-05]
+	Updated devel/lua-bitlib to 5.3.0nb1 [maya 2019-09-05]
+	Updated devel/cbindgen to 0.9.1 [ryoon 2019-09-06]
+	Updated devel/nss to 3.46 [ryoon 2019-09-06]
+	Updated www/firefox to 69.0 [ryoon 2019-09-06]
+	Updated www/firefox-l10n to 69.0 [ryoon 2019-09-06]
+	Updated databases/py-ldap3 to 2.6.1 [adam 2019-09-06]
+	Updated devel/py-xopen to 0.8.2 [adam 2019-09-06]
+	Updated x11/XmHTML to 1.1.10 [nros 2019-09-06]
+	Updated databases/couchdb to 2.3.1 [jperkin 2019-09-06]
+	Updated mail/postgrey to 1.36nb5 [jperkin 2019-09-06]
