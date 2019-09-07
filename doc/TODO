@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19242 2019/09/06 02:53:54 ryoon Exp $
+$NetBSD: TODO,v 1.19248 2019/09/07 15:02:09 nia Exp $
 
 Suggested new packages
 ======================
@@ -618,21 +618,16 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o evolution-exchange-3.5.2
 	o evolution-mapi-0.32.2
 	o ex-20050325
-	o exaile-3.4.4
 	o exmh-2.8.0
 	o faces-1.7.7
 	o facter-2.4.5
 	o fakeroot-1.6.5
 	o felt-3.07 [wip]
 	o fengoffice-3.4.0.17
-	o festival-2.4
 	o fet-5.28.6
 	o fetchyahoo-2.14.0
 	o filerunner-14.06.18.10
-	o fillets-ng-0.7.4
-	o fillets-ng-data-0.7.4
 	o flashplayer-0.4.13
-	o flite-1.4
 	o flow-tools-0.411
 	o flpsed-0.7.3
 	o fltk2-2.0pre8323
@@ -1155,7 +1150,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o py-hsm-1.1.1
 	o py-input-pad-1.4.2
 	o py-keybinder-0.3.1
-	o py-mechanize-0.4.3
 	o py-more-itertools-7.2.0
 	o py-musicbrainz-0.7.4
 	o py-newt-0.52.20
