@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19237 2019/09/02 09:05:10 adam Exp $
+$NetBSD: TODO,v 1.19248 2019/09/07 15:02:09 nia Exp $
 
 Suggested new packages
 ======================
@@ -496,7 +496,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o cardboard-schedule-1.14c [at http://www.bright-green.com/downloads/]
 	o catdoc-1.1
 	o catdoc-tk-1.1
-	o cbindgen-0.9.1
 	o cddbd-1.5.2
 	o cdrkit-1.1.10
 	o cfengine3-3.10.2
@@ -619,21 +618,16 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o evolution-exchange-3.5.2
 	o evolution-mapi-0.32.2
 	o ex-20050325
-	o exaile-3.4.4
 	o exmh-2.8.0
 	o faces-1.7.7
 	o facter-2.4.5
 	o fakeroot-1.6.5
 	o felt-3.07 [wip]
 	o fengoffice-3.4.0.17
-	o festival-2.4
 	o fet-5.28.6
 	o fetchyahoo-2.14.0
 	o filerunner-14.06.18.10
-	o fillets-ng-0.7.4
-	o fillets-ng-data-0.7.4
 	o flashplayer-0.4.13
-	o flite-1.4
 	o flow-tools-0.411
 	o flpsed-0.7.3
 	o fltk2-2.0pre8323
@@ -676,7 +670,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o geeqie-1.5.1
 	o genius-1.0.21
 	o gens-2.15.5
-	o gentoo-0.20.4
 	o geoclue-2.1.10
 	o gfract-0.33
 	o ghc-8.2
@@ -853,7 +846,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o ipv6-toolkit-2.0
 	o ipv6calc-0.99.1
 	o ipw-firmware-1.3
-	o ircservices-5.1.21
 	o iroffer-1.4b01
 	o ispell-ga-4.6
 	o ispell-ru-0.99g5
@@ -1158,7 +1150,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o py-hsm-1.1.1
 	o py-input-pad-1.4.2
 	o py-keybinder-0.3.1
-	o py-mechanize-0.4.3
 	o py-more-itertools-7.2.0
 	o py-musicbrainz-0.7.4
 	o py-newt-0.52.20
@@ -1166,7 +1157,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o py-pendrell-0.3.7
 	o py-ptt-1.10.2
 	o py-pycountry-1.20
-	o py-setuptools-41.2.0
 	o py-simpletal-5.1
 	o py-spf-2.0.12t
 	o py-sybase-0.37
@@ -1313,7 +1303,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o tellico-2.3.11
 	o tetrinetx-1.40c
 	o tex2page-20130325
-	o texmaker-5.0.2
 	o tfmxplay-1.1.6
 	o thunderbird-enigmail-2.1.2 [needs thunderbird-68.0]
 	o tig-2.2
