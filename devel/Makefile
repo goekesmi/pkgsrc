@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2908 2019/09/09 12:59:06 nia Exp $
+# $NetBSD: Makefile,v 1.2911 2019/09/11 14:28:13 wiz Exp $
 #
 
 COMMENT=	Development utilities
@@ -75,6 +75,7 @@ SUBDIR+=	SDL_gfx
 SUBDIR+=	SDL_ttf
 SUBDIR+=	SDLmm
 SUBDIR+=	SOPE
+SUBDIR+=	SOPE4
 SUBDIR+=	ZenTest
 SUBDIR+=	accerciser3
 SUBDIR+=	acme
@@ -659,8 +660,6 @@ SUBDIR+=	libiberty
 SUBDIR+=	libidn
 SUBDIR+=	libidn2
 SUBDIR+=	libindicator
-SUBDIR+=	libindicator-tools
-SUBDIR+=	libindicator3
 SUBDIR+=	libinotify
 SUBDIR+=	libite
 SUBDIR+=	libixp
@@ -2108,7 +2107,6 @@ SUBDIR+=	py-entrypoints
 SUBDIR+=	py-enum34
 SUBDIR+=	py-exam
 SUBDIR+=	py-execnet
-SUBDIR+=	py-expect
 SUBDIR+=	py-expressions
 SUBDIR+=	py-extras
 SUBDIR+=	py-extratools

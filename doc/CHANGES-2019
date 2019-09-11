@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3832 2019/09/11 05:26:06 rillig Exp $
+$NetBSD: CHANGES-2019,v 1.3846 2019/09/11 19:02:24 nia Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -6271,6 +6271,7 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated sysutils/munin-node to 2.0.49 [tm 2019-09-09]
 	Removed devel/libappindicator3 successor devel/libappindicator [nia 2019-09-09]
 	Removed devel/libindicator3 successor devel/libindicator [nia 2019-09-09]
+	Removed devel/libindicator-tools [nia 2019-09-09]
 	Updated editors/nano to 4.4 [wiedi 2019-09-09]
 	Updated geography/gama to 2.07 [gdt 2019-09-10]
 	Updated lang/guile22 to 2.2.6nb2 [gutteridge 2019-09-10]
@@ -6284,3 +6285,19 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated www/webkit-gtk to 2.26.0 [leot 2019-09-10]
 	Updated devel/p5-Test-BDD-Cucumber to 0.62 [schmonz 2019-09-10]
 	Updated pkgtools/url2pkg to 2.34 [rillig 2019-09-11]
+	Updated www/curl to 7.66.0 [leot 2019-09-11]
+	Updated www/py-flask-jwt-extended to 3.23.0 [adam 2019-09-11]
+	Updated devel/py-pluggy to 0.13.0 [adam 2019-09-11]
+	Updated devel/py-configparser to 4.0.1 [adam 2019-09-11]
+	Updated devel/py-importlib-metadata to 0.21 [adam 2019-09-11]
+	Removed devel/py-expect [adam 2019-09-11]
+	Updated security/KeePass to 2.43 [nia 2019-09-11]
+	Added devel/SOPE4 version 4.0.8 [tm 2019-09-11]
+	Updated net/radsecproxy to 1.8.0 [he 2019-09-11]
+	Updated www/SOGo4 to 4.0.8 [tm 2019-09-11]
+	Updated net/youtube-dl to 20190901 [leot 2019-09-11]
+	Updated parallel/hwloc to 1.11.13 [adam 2019-09-11]
+	Updated geography/opencpn-plugin-watchdog to 2.4.6 [bouyer 2019-09-11]
+	Added games/eureka version 1.24 [baeuerle 2019-09-11]
+	Updated graphics/libgdiplus to 6.0.2 [nia 2019-09-11]
+	Updated games/REminiscence to 0.3.7 [nia 2019-09-11]
