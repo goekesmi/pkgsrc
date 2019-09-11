@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.3819 2019/09/09 16:05:01 wiedi Exp $
+$NetBSD: CHANGES-2019,v 1.3832 2019/09/11 05:26:06 rillig Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -6272,3 +6272,15 @@ Changes to the packages collection and infrastructure in 2019:
 	Removed devel/libappindicator3 successor devel/libappindicator [nia 2019-09-09]
 	Removed devel/libindicator3 successor devel/libindicator [nia 2019-09-09]
 	Updated editors/nano to 4.4 [wiedi 2019-09-09]
+	Updated geography/gama to 2.07 [gdt 2019-09-10]
+	Updated lang/guile22 to 2.2.6nb2 [gutteridge 2019-09-10]
+	Updated www/gitea to 1.9.3 [nia 2019-09-10]
+	Updated net/dnscrypt-proxy2 to 2.0.27 [nia 2019-09-10]
+	Updated devel/libuv to 1.32.0 [adam 2019-09-10]
+	Added www/motyl version 1.0.2 [fcambus 2019-09-10]
+	Added audio/adplay version 1.8 [fcambus 2019-09-10]
+	Updated databases/php-redis3 to 3.1.6 [otis 2019-09-10]
+	Added textproc/p5-sdf version 2.001beta1 [schmonz 2019-09-10]
+	Updated www/webkit-gtk to 2.26.0 [leot 2019-09-10]
+	Updated devel/p5-Test-BDD-Cucumber to 0.62 [schmonz 2019-09-10]
+	Updated pkgtools/url2pkg to 2.34 [rillig 2019-09-11]
